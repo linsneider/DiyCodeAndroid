@@ -23,5 +23,9 @@ a Third-party Android App of DiyCode Community
 [SamuelGjk/DiyCode](https://github.com/SamuelGjk/DiyCode)
 
 [xshengcn/DiyCode](https://github.com/xshengcn/DiyCode)
+
+## 编译注意事项
+因为使用了签名验证，所以使用前请将[native-security.cpp](https://github.com/linsneider/DiyCodeAndroid/blob/master/app/src/main/cpp/native-security.cpp)里的
+static const char *SIGN 改为自己打包用的签名
 ## 联系我
 linsneijder@gmail.com

@@ -1,0 +1,105 @@
+<resources>
+    <string name="app_name">DiyCode</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <item name="tag_first" type="id"/>
+    <item name="tag_second" type="id"/>
+    <item name="tag_third" type="id"/>
+    <item name="glide_tag" type="id"/>
+    <item name="drawable_callback_tag" type="id"/>
+
+    <string name="scroll_aware_fab_behavior">com.sneider.diycode.utils.ScrollAwareFABBehavior</string>
+
+    <string name="topics">社区</string>
+    <string name="projects">项目</string>
+    <string name="news">News</string>
+    <string name="sites">酷站</string>
+    <string name="search">搜索</string>
+    <string name="share">分享</string>
+    <string name="refresh">刷新</string>
+    <string name="open_browser">在浏览器中打开</string>
+    <string name="save">保存</string>
+    <string name="favorite">收藏</string>
+    <string name="favorited">已收藏</string>
+    <string name="open_web">在网页中查看</string>
+    <string name="send">提交</string>
+    <string name="notification">通知</string>
+    <string name="select_node">选择节点</string>
+    <string name="unread">未读</string>
+    <string name="clear_all">清空</string>
+    <string name="my_topic">我的帖子</string>
+    <string name="his_topic">他的帖子</string>
+    <string name="my_reply">我的回复</string>
+    <string name="his_reply">他的回复</string>
+    <string name="my_share">我的分享</string>
+    <string name="his_share">他的分享</string>
+    <string name="my_favorite">我的收藏</string>
+    <string name="his_favorite">他的收藏</string>
+    <string name="my_notification">我的通知</string>
+    <string name="my_follower">我的关注者</string>
+    <string name="his_follower">他的关注者</string>
+    <string name="my_following">我正在关注</string>
+    <string name="his_following">他正在关注</string>
+    <string name="my_block">我已屏蔽</string>
+    <string name="following">关注</string>
+    <string name="block">屏蔽</string>
+    <string name="github_ranking">Github Ranking</string>
+    <string name="wiki">Wiki</string>
+    <string name="setting">设置</string>
+    <string name="webview_hint">轻触屏幕重新加载</string>
+    <string name="dot">•</string>
+    <string name="edit">编辑</string>
+    <string name="preview">预览</string>
+    <string name="content">内容(Markdown格式)</string>
+    <string name="title">标题</string>
+    <string name="link">链接</string>
+    <string name="delete">删除</string>
+    <string name="username">用户名</string>
+    <string name="password">密码</string>
+    <string name="please_input_username">请输入用户名</string>
+    <string name="please_input_password">请输入密码</string>
+    <string name="login">登录</string>
+    <string name="please_login">请先登录</string>
+    <string name="login_success">欢迎回来，{0}</string>
+    <string name="login_failed">登录失败</string>
+    <string name="login_ing">正在登录&#8230;</string>
+    <string name="login_btn">登 录</string>
+    <string name="logout">退出登录</string>
+    <string name="register">注册</string>
+    <string name="forget_password">忘记密码？</string>
+    <string name="reply_content">回复内容</string>
+    <string name="reload">重新加载</string>
+    <string name="some_problem">似乎出了点问题</string>
+    <string name="bottom">已经到底啦</string>
+    <string name="exit">再按一次退出</string>
+    <string name="reply_success">回复成功</string>
+    <string name="reply_failed">回复失败</string>
+    <string name="delete_hint">确定要删除吗？</string>
+    <string name="delete_success">删除成功</string>
+    <string name="delete_failed">删除失败</string>
+    <string name="confirm">确定</string>
+    <string name="cancel">取消</string>
+    <string name="reply">回复</string>
+    <string name="who_reply">{0} 的回复</string>
+    <string name="reply_hint">请输入回复内容</string>
+    <string name="reply_prefix">#{0}楼 @{1}</string>
+    <string name="floor_deleted">{0}楼 Deleted</string>
+    <string name="floor">#{0}楼</string>
+    <string name="read_count">{0}次阅读</string>
+    <string name="no_reply">暂无回复</string>
+    <string name="publish_time">于{0}发布</string>
+    <string name="topic">话题</string>
+    <string name="no_data">没有数据</string>
+    <string name="category">分类</string>
+    <string name="uploading">正在上传&#8230;</string>
+    <string name="clear_cache">清除缓存</string>
+    <string name="total_cache_description">当前缓存大小约为 {0}</string>
+    <string name="check_update">检查更新</string>
+    <string name="current_version">当前版本 {0}</string>
+    <string name="update">更新</string>
+    <string name="contact">联系作者</string>
+    <string name="feedback">意见反馈</string>
+    <string name="please_wait">请稍候&#8230;</string>
+</resources>

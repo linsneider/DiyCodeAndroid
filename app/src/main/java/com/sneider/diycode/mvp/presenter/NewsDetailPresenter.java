@@ -1,0 +1,209 @@
+package com.sneider.diycode.mvp.presenter;
+
+import android.app.Application;
+import android.view.View;
+
+import com.alibaba.android.arouter.launcher.ARouter;
+import com.jess.arms.di.scope.ActivityScope;
+import com.jess.arms.integration.AppManager;
+import com.jess.arms.mvp.BasePresenter;
+import com.jess.arms.utils.PermissionUtil;
+import com.jess.arms.utils.UiUtils;
+import com.sneider.diycode.app.ARouterPaths;
+import com.sneider.diycode.mvp.contract.NewsDetailContract;
+import com.sneider.diycode.mvp.model.bean.News;
+import com.sneider.diycode.mvp.model.bean.Reply;
+import com.sneider.diycode.mvp.ui.adapter.NewsDetailAdapter;
+import com.sneider.diycode.utils.DiycodeUtils;
+import com.sneider.diycode.utils.Constant;
+import com.sneider.diycode.utils.RxUtils;
+import com.sneider.diycode.utils.html.HtmlUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.schedulers.Schedulers;
+import me.jessyan.rxerrorhandler.core.RxErrorHandler;
+import me.jessyan.rxerrorhandler.handler.ErrorHandleSubscriber;
+import me.jessyan.rxerrorhandler.handler.RetryWithDelay;
+
+import static com.sneider.diycode.app.ARouterPaths.PUBLIC_PHOTO;
+import static com.sneider.diycode.app.ARouterPaths.REPLY_ADD;
+import static com.sneider.diycode.app.ARouterPaths.TOPIC_DETAIL;
+import static com.sneider.diycode.app.ARouterPaths.USER_DETAIL;
+import static com.sneider.diycode.mvp.ui.activity.AddReplyActivity.EXTRA_DATA;
+import static com.sneider.diycode.mvp.ui.activity.AddReplyActivity.EXTRA_REPLY_ID;
+import static com.sneider.diycode.mvp.ui.activity.AddReplyActivity.EXTRA_REPLY_TYPE;
+import static com.sneider.diycode.mvp.ui.activity.AddReplyActivity.TYPE_NEWS;
+import static com.sneider.diycode.mvp.ui.activity.NewsListActivity.EXTRA_NEWS_NODE_ID;
+import static com.sneider.diycode.mvp.ui.activity.NewsListActivity.EXTRA_NEWS_NODE_NAME;
+import static com.sneider.diycode.mvp.ui.activity.PhotoActivity.EXTRA_PHOTO_URL;
+import static com.sneider.diycode.mvp.ui.activity.TopicDetailActivity.EXTRA_TOPIC_ID;
+import static com.sneider.diycode.mvp.ui.activity.UserDetailActivity.EXTRA_USERNAME;
+
+@ActivityScope
+public class NewsDetailPresenter extends BasePresenter<NewsDetailContract.Model, NewsDetailContract.View> {
+
+    private Application mApplication;
+    private AppManager mAppManager;
+    private RxErrorHandler mErrorHandler;
+    private List mList = new ArrayList();
+    private NewsDetailAdapter mAdapter;
+    private int offset = 0;
+    private boolean isFirst = true;
+
+    @Inject
+    public NewsDetailPresenter(NewsDetailContract.Model model, NewsDetailContract.View rootView, RxErrorHandler handler, AppManager appManager, Application application) {
+        super(model, rootView);
+        mApplication = application;
+        mAppManager = appManager;
+        mErrorHandler = handler;
+    }
+
+    public void initAdapter(News news) {
+        if (mAdapter == null) {
+            mAdapter = new NewsDetailAdapter(mList);
+            mRootView.setAdapter(mAdapter);
+            mList.add(news);
+            mAdapter.setOnItemClickListener(new NewsDetailAdapter.OnItemClickListener() {
+                @Override
+                public void onUserClick(View view, String username) {
+                    ARouter.getInstance().build(USER_DETAIL)
+                            .withString(EXTRA_USERNAME, username)
+                            .navigation();
+                }
+
+                @Override
+                public void onNodeNameClick(View view, String nodeName, int nodeId) {
+                    ARouter.getInstance().build(ARouterPaths.NEWS_LIST)
+                            .withString(EXTRA_NEWS_NODE_NAME, nodeName)
+                            .withInt(EXTRA_NEWS_NODE_ID, nodeId)
+                            .navigation();
+                }
+
+                @Override
+                public void onLinkClick(View view, String link) {
+                    DiycodeUtils.openWebActivity(link);
+                }
+
+                @Override
+                public void onEditReplyClick(View view, Reply reply) {
+                    if (DiycodeUtils.checkToken(mApplication)) {
+                        ARouter.getInstance().build(REPLY_ADD)
+                                .withInt(EXTRA_REPLY_TYPE, TYPE_NEWS)
+                                .withSerializable(EXTRA_DATA, news)
+                                .withInt(EXTRA_REPLY_ID, reply.getId())
+                                .navigation();
+                    }
+                }
+
+                @Override
+                public void onLikeReplyClick(View view, Reply reply) {
+                    UiUtils.snackbarText("此功能暂未实现");
+                }
+
+                @Override
+                public void onReplyClick(View view, Reply reply, int floor) {
+                    UiUtils.snackbarText("此功能暂未实现");
+//                    if (DiycodeUtils.checkToken(mApplication)) {
+//                        ARouter.getInstance().build(REPLY_ADD)
+//                                .withInt(EXTRA_REPLY_TYPE, TYPE_NEWS)
+//                                .withSerializable(EXTRA_DATA, news)
+//                                .withString(EXTRA_REPLY_USER, reply.getUser().getLogin())
+//                                .withInt(EXTRA_REPLY_FLOOR, floor)
+//                                .navigation();
+//                    }
+                }
+            });
+            mAdapter.setCallback(new HtmlUtils.Callback() {
+                @Override
+                public void clickUrl(String url) {
+                    if (url.contains("http")) {
+                        if (url.startsWith("https://www.diycode.cc/topics/")) {
+                            ARouter.getInstance().build(TOPIC_DETAIL)
+                                    .withInt(EXTRA_TOPIC_ID, Integer.valueOf(url.substring(30)))
+                                    .navigation();
+                            return;
+                        }
+                        DiycodeUtils.openWebActivity(url);
+                    } else if (url.startsWith("#reply")) {
+                        String floorStr = url.substring(6);
+                        try {
+                            int floor = Integer.parseInt(floorStr);
+                            mRootView.smoothToPosition(floor);
+                        } catch (NumberFormatException e) {
+
+                        }
+                    } else if (url.startsWith("/")) {
+                        ARouter.getInstance().build(USER_DETAIL)
+                                .withString(EXTRA_USERNAME, url.substring(1))
+                                .navigation();
+                    }
+                }
+
+                @Override
+                public void clickImage(String source) {
+                    ARouter.getInstance().build(PUBLIC_PHOTO)
+                            .withString(EXTRA_PHOTO_URL, source)
+                            .navigation();
+                }
+            });
+        }
+    }
+
+    public void getNewsReplies(int id, boolean isRefresh) {
+        PermissionUtil.externalStorage(new PermissionUtil.RequestPermission() {
+            @Override
+            public void onRequestPermissionSuccess() {
+            }
+
+            @Override
+            public void onRequestPermissionFailure() {
+            }
+        }, mRootView.getRxPermissions(), mErrorHandler);
+        if (isRefresh) offset = 0;
+        boolean isEvictCache = true;
+//        if (isRefresh && isFirst) {
+//            isFirst = false;
+//            isEvictCache = false;
+//        }
+        mModel.getNewsReplies(id, offset, isEvictCache)
+                .subscribeOn(Schedulers.io())
+                .retryWhen(new RetryWithDelay(3, 2))
+                .doOnSubscribe(disposable -> {
+                    if (isRefresh) mRootView.showLoading();
+                }).subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .compose(RxUtils.bindToLifecycle(mRootView))
+                .subscribe(new ErrorHandleSubscriber<List<Reply>>(mErrorHandler) {
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        super.onError(e);
+                        mRootView.onLoadMoreError();
+                    }
+
+                    @Override
+                    public void onNext(@NonNull List<Reply> data) {
+                        mRootView.onLoadMoreComplete();
+                        mList.addAll(data);
+                        mAdapter.notifyDataSetChanged();
+                        offset = mAdapter.getItemCount() - 1;// 减去第一个News
+                        if (data.size() < Constant.PAGE_SIZE) mRootView.onLoadMoreEnd();
+                    }
+                });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mAdapter = null;
+        mList = null;
+        mErrorHandler = null;
+        mAppManager = null;
+        mApplication = null;
+    }
+}

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_f0f0f0"
+    android:fitsSystemWindows="true">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/actionBarSize"
+            android:theme="@style/ToolBarTheme"
+            app:titleTextAppearance="@style/ToolbarTitle"/>
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.sneider.diycode.widget.SettingRowView
+                android:id="@+id/btn_clear_cache"
+                style="@style/layout_setting"
+                app:rowTitle="@string/clear_cache"/>
+
+            <com.sneider.diycode.widget.SettingRowView
+                android:id="@+id/btn_check_update"
+                style="@style/layout_setting"
+                app:rowTitle="@string/check_update"/>
+
+            <LinearLayout
+                android:id="@+id/btn_feedback"
+                style="@style/layout_setting"
+                android:paddingBottom="@dimen/spacing_m"
+                android:paddingTop="@dimen/spacing_m">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/feedback"
+                    android:textColor="@color/color_4d4d4d"
+                    android:textSize="15sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btn_contact"
+                style="@style/layout_setting"
+                android:paddingBottom="@dimen/spacing_m"
+                android:paddingTop="@dimen/spacing_m">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/contact"
+                    android:textColor="@color/color_4d4d4d"
+                    android:textSize="15sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btn_logout"
+                style="@style/layout_setting"
+                android:paddingBottom="@dimen/spacing_m"
+                android:paddingTop="@dimen/spacing_m"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/logout"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="18sp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+</android.support.design.widget.CoordinatorLayout>

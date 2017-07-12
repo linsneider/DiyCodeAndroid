@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:id="@+id/group1">
+
+        <item
+            android:id="@+id/nav_my_topic"
+            android:icon="@drawable/ic_topic"
+            android:title="@string/my_topic"/>
+
+        <item
+            android:id="@+id/nav_my_favorite"
+            android:icon="@drawable/ic_favorite"
+            android:title="@string/my_favorite"/>
+
+        <item
+            android:id="@+id/nav_my_reply"
+            android:icon="@drawable/ic_my_reply"
+            android:title="@string/my_reply"/>
+
+        <item
+            android:id="@+id/nav_my_share"
+            android:icon="@drawable/ic_share"
+            android:title="@string/my_share"/>
+    </group>
+
+    <group android:id="@+id/group2">
+
+        <item
+            android:id="@+id/nav_github_ranking"
+            android:icon="@drawable/ic_github"
+            android:title="@string/github_ranking"/>
+
+        <item
+            android:id="@+id/nav_wiki"
+            android:icon="@drawable/ic_wiki"
+            android:title="@string/wiki"/>
+
+        <item
+            android:id="@+id/nav_sites"
+            android:icon="@drawable/ic_sites"
+            android:title="@string/sites"/>
+
+        <item
+            android:id="@+id/nav_setting"
+            android:icon="@drawable/ic_settings"
+            android:title="@string/setting"/>
+    </group>
+</menu>

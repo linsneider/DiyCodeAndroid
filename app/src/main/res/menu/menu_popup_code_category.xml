@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_ruby"
+        android:title="Ruby"/>
+
+    <item
+        android:id="@+id/action_html_erb"
+        android:title="HTML/ERB"/>
+
+    <item
+        android:id="@+id/action_css_scss"
+        android:title="CSS/SCSS"/>
+
+    <item
+        android:id="@+id/action_javascript"
+        android:title="JavaScript"/>
+
+    <item
+        android:id="@+id/action_yaml"
+        android:title="YAML"/>
+
+    <item
+        android:id="@+id/action_coffeescript"
+        android:title="CoffeeScript"/>
+
+    <item
+        android:id="@+id/action_nginx_redis"
+        android:title="Nginx/Redis"/>
+
+    <item
+        android:id="@+id/action_python"
+        android:title="Python"/>
+
+    <item
+        android:id="@+id/action_php"
+        android:title="PHP"/>
+
+    <item
+        android:id="@+id/action_java"
+        android:title="Java"/>
+
+    <item
+        android:id="@+id/action_erlang"
+        android:title="Erlang"/>
+
+    <item
+        android:id="@+id/action_shell_bash"
+        android:title="Shell/Bash"/>
+</menu>

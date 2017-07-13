@@ -24,7 +24,19 @@ a Third-party Android App of [DiyCode Community](http://www.diycode.cc/)
 
 [xshengcn/DiyCode](https://github.com/xshengcn/DiyCode)
 ## 注意
-代码中使用了签名验证，所以使用前请将 [`native-security.cpp`](https://github.com/linsneider/DiyCodeAndroid/blob/master/app/src/main/cpp/native-security.cpp) 里的`static const char *SIGN`改为自己打包用的签名，或是直接把`jint JNI_OnLoad(JavaVM *vm, void *reserved)`这个方法注释掉即可。
+代码中使用了签名验证，所以使用前请将 [`native-security.cpp`](https://github.com/linsneider/DiyCodeAndroid/blob/master/app/src/main/cpp/native-security.cpp) 里的`static const char *SIGN`改为自己打包用的签名，签名的获取代码如下：
+
+`PackageManager pm = getPackageManager();`
+
+`PackageInfo pi = pm.getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);`
+
+`Signature[] signatures = pi.signatures;`
+
+`Signature signature0 = signatures[0];`
+
+`return signature0.toCharsString();`
+
+或是直接把 [`native-security.cpp`](https://github.com/linsneider/DiyCodeAndroid/blob/master/app/src/main/cpp/native-security.cpp) 里的`jint JNI_OnLoad(JavaVM *vm, void *reserved)`这个方法注释掉即可。
 ### 推荐阅读
 [Android 密钥保护和 C/S 网络传输安全理论指南](https://drakeet.me/android-security-guide/)
 

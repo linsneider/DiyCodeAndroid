@@ -61,78 +61,13 @@ public class ReplyListActivity extends BaseActivity<ReplyListPresenter> implemen
     public void initData(Bundle savedInstanceState) {
         mUsername = getIntent().getStringExtra(EXTRA_REPLY_USER);
         User user = DiycodeUtils.getUser(this);
-        if (user != null && mUsername.equals(user.getLogin())) {
-            mToolbar.setTitle(R.string.my_reply);
-        } else {
-            mToolbar.setTitle(MessageFormat.format(getString(R.string.who_reply), mUsername));
-        }
+        mToolbar.setTitle(user != null && mUsername.equals(user.getLogin()) ? getString(R.string.my_reply) :
+                MessageFormat.format(getString(R.string.who_reply), mUsername));
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         setSupportActionBar(mToolbar);
 
         mPresenter.initAdapter();
         mPresenter.getUserReplies(mUsername, true);
-    }
-
-    @Override
-    public void setAdapter(DefaultAdapter adapter) {
-        mRecyclerView.setAdapter(adapter);
-        initRecyclerView();
-    }
-
-    @Override
-    public void setEmpty(boolean isEmpty) {
-        mRecyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
-        mTvNoData.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
-    }
-
-    private void initRecyclerView() {
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-        LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        mRecyclerView.setLayoutManager(manager);
-        mRecyclerView.setLoadMoreListener(() -> mPresenter.getUserReplies(mUsername, false));
-        mRecyclerView.setOnClickReloadListener(() -> {
-            mRecyclerView.setCanloadMore(true);
-            mRecyclerView.showLoadMore();
-            mPresenter.getUserReplies(mUsername, false);
-        });
-    }
-
-    @Override
-    public void onRefresh() {
-        mPresenter.getUserReplies(mUsername, true);
-        mRecyclerView.setCanloadMore(true);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onLoadMoreComplete() {
-        mRecyclerView.loadMoreComplete();
-    }
-
-    @Override
-    public void onLoadMoreError() {
-        mRecyclerView.loadMoreError();
-        mRecyclerView.setCanloadMore(false);
-    }
-
-    @Override
-    public void onLoadMoreEnd() {
-        mRecyclerView.loadMoreEnd();
-        mRecyclerView.setCanloadMore(false);
-    }
-
-    @Override
-    public RxPermissions getRxPermissions() {
-        return mRxPermissions;
     }
 
     @Override
@@ -160,6 +95,68 @@ public class ReplyListActivity extends BaseActivity<ReplyListPresenter> implemen
     @Override
     public void killMyself() {
         finish();
+    }
+
+    @Override
+    public void setAdapter(DefaultAdapter adapter) {
+        mRecyclerView.setAdapter(adapter);
+        initRecyclerView();
+    }
+
+    private void initRecyclerView() {
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        mRecyclerView.setLayoutManager(manager);
+        mRecyclerView.setLoadMoreListener(() -> mPresenter.getUserReplies(mUsername, false));
+        mRecyclerView.setOnClickReloadListener(() -> {
+            mRecyclerView.setCanloadMore(true);
+            mRecyclerView.showLoadMore();
+            mPresenter.getUserReplies(mUsername, false);
+        });
+    }
+
+    @Override
+    public void setEmpty(boolean isEmpty) {
+        mRecyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+        mTvNoData.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void onLoadMoreComplete() {
+        mRecyclerView.loadMoreComplete();
+    }
+
+    @Override
+    public void onLoadMoreError() {
+        mRecyclerView.loadMoreError();
+        mRecyclerView.setCanloadMore(false);
+    }
+
+    @Override
+    public void onLoadMoreEnd() {
+        mRecyclerView.loadMoreEnd();
+        mRecyclerView.setCanloadMore(false);
+    }
+
+    @Override
+    public RxPermissions getRxPermissions() {
+        return mRxPermissions;
+    }
+
+    @Override
+    public void onRefresh() {
+        mPresenter.getUserReplies(mUsername, true);
+        mRecyclerView.setCanloadMore(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

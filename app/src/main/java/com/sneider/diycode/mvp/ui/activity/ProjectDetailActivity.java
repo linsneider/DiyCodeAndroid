@@ -84,31 +84,28 @@ public class ProjectDetailActivity extends BaseActivity<ProjectDetailPresenter> 
         });
     }
 
-    @Subscriber
-    private void onReplyEvent(ReplyEvent event) {
-        mRecyclerView.setCanloadMore(true);
+    @Override
+    public void showLoading() {
         mRecyclerView.showLoadMore();
-        mPresenter.initAdapter(mProject);
-        mPresenter.getProjectReplies(mProject.getId(), true);
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_toolbar_detail_activity, menu);
-        return true;
+    public void hideLoading() {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            finish();
-        } else if (id == R.id.action_share) {
-            DiycodeUtils.shareText(this, mProject.getName(), "https://www.diycode.cc/projects/" + mProject.getId());
-        } else if (id == R.id.action_open_web) {
-            DiycodeUtils.openWebActivity("https://www.diycode.cc/projects/" + mProject.getId());
-        }
-        return super.onOptionsItemSelected(item);
+    public void showMessage(String message) {
+        UiUtils.snackbarText(message);
+    }
+
+    @Override
+    public void launchActivity(Intent intent) {
+        UiUtils.startActivity(intent);
+    }
+
+    @Override
+    public void killMyself() {
+        finish();
     }
 
     @Override
@@ -139,27 +136,22 @@ public class ProjectDetailActivity extends BaseActivity<ProjectDetailPresenter> 
     }
 
     @Override
-    public void showLoading() {
-        mRecyclerView.showLoadMore();
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_toolbar_detail_activity, menu);
+        return true;
     }
 
     @Override
-    public void hideLoading() {
-    }
-
-    @Override
-    public void showMessage(String message) {
-        UiUtils.snackbarText(message);
-    }
-
-    @Override
-    public void launchActivity(Intent intent) {
-        UiUtils.startActivity(intent);
-    }
-
-    @Override
-    public void killMyself() {
-        finish();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            finish();
+        } else if (id == R.id.action_share) {
+            DiycodeUtils.shareText(this, mProject.getName(), "https://www.diycode.cc/projects/" + mProject.getId());
+        } else if (id == R.id.action_open_web) {
+            DiycodeUtils.openWebActivity("https://www.diycode.cc/projects/" + mProject.getId());
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -167,5 +159,13 @@ public class ProjectDetailActivity extends BaseActivity<ProjectDetailPresenter> 
         DefaultAdapter.releaseAllHolder(mRecyclerView);
         super.onDestroy();
         mRxPermissions = null;
+    }
+
+    @Subscriber
+    private void onReplyEvent(ReplyEvent event) {
+        mRecyclerView.setCanloadMore(true);
+        mRecyclerView.showLoadMore();
+        mPresenter.initAdapter(mProject);
+        mPresenter.getProjectReplies(mProject.getId(), true);
     }
 }

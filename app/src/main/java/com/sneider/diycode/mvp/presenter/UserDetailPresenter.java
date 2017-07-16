@@ -6,6 +6,7 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.jess.arms.di.scope.ActivityScope;
 import com.jess.arms.integration.AppManager;
 import com.jess.arms.mvp.BasePresenter;
+import com.sneider.diycode.R;
 import com.sneider.diycode.mvp.contract.UserDetailContract;
 import com.sneider.diycode.mvp.model.bean.Ok;
 import com.sneider.diycode.mvp.model.bean.User;
@@ -59,7 +60,7 @@ public class UserDetailPresenter extends BasePresenter<UserDetailContract.Model,
                     @Override
                     public void onError(@NonNull Throwable e) {
                         super.onError(e);
-                        ToastUtils.showShort("关注失败");
+                        ToastUtils.showShort(R.string.follow_failed);
                     }
 
                     @Override
@@ -79,7 +80,7 @@ public class UserDetailPresenter extends BasePresenter<UserDetailContract.Model,
                     @Override
                     public void onError(@NonNull Throwable e) {
                         super.onError(e);
-                        ToastUtils.showShort("屏蔽失败");
+                        ToastUtils.showShort(R.string.block_failed);
                     }
 
                     @Override

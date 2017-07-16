@@ -4,11 +4,12 @@ import android.app.Application;
 import android.view.View;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.blankj.utilcode.util.ToastUtils;
 import com.jess.arms.di.scope.ActivityScope;
 import com.jess.arms.integration.AppManager;
 import com.jess.arms.mvp.BasePresenter;
 import com.jess.arms.utils.PermissionUtil;
-import com.jess.arms.utils.UiUtils;
+import com.sneider.diycode.R;
 import com.sneider.diycode.mvp.contract.TopicReplyContract;
 import com.sneider.diycode.mvp.model.bean.Reply;
 import com.sneider.diycode.mvp.model.bean.Topic;
@@ -88,7 +89,7 @@ public class TopicReplyPresenter extends BasePresenter<TopicReplyContract.Model,
 
                 @Override
                 public void onLikeReplyClick(View view, Reply reply) {
-                    UiUtils.snackbarText("此功能暂未实现");
+                    ToastUtils.showShort(R.string.no_implement);
                 }
 
                 @Override

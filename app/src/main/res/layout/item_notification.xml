@@ -78,7 +78,6 @@
             android:id="@+id/tv_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_xs"
             android:layout_marginStart="40dp"
             android:layout_marginTop="@dimen/spacing_xs"
             android:textColor="@color/color_4d4d4d"
@@ -100,6 +99,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:background="@color/colorAccent"
+        android:paddingEnd="@dimen/spacing_xxs"
+        android:paddingStart="@dimen/spacing_xxs"
         android:text="@string/unread"
         android:textColor="@color/color_ffffff"
         android:textSize="12sp"/>

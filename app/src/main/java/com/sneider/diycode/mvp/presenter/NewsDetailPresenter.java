@@ -4,18 +4,19 @@ import android.app.Application;
 import android.view.View;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.blankj.utilcode.util.ToastUtils;
 import com.jess.arms.di.scope.ActivityScope;
 import com.jess.arms.integration.AppManager;
 import com.jess.arms.mvp.BasePresenter;
 import com.jess.arms.utils.PermissionUtil;
-import com.jess.arms.utils.UiUtils;
+import com.sneider.diycode.R;
 import com.sneider.diycode.app.ARouterPaths;
 import com.sneider.diycode.mvp.contract.NewsDetailContract;
 import com.sneider.diycode.mvp.model.bean.News;
 import com.sneider.diycode.mvp.model.bean.Reply;
 import com.sneider.diycode.mvp.ui.adapter.NewsDetailAdapter;
-import com.sneider.diycode.utils.DiycodeUtils;
 import com.sneider.diycode.utils.Constant;
+import com.sneider.diycode.utils.DiycodeUtils;
 import com.sneider.diycode.utils.RxUtils;
 import com.sneider.diycode.utils.html.HtmlUtils;
 
@@ -103,12 +104,12 @@ public class NewsDetailPresenter extends BasePresenter<NewsDetailContract.Model,
 
                 @Override
                 public void onLikeReplyClick(View view, Reply reply) {
-                    UiUtils.snackbarText("此功能暂未实现");
+                    ToastUtils.showShort(R.string.no_implement);
                 }
 
                 @Override
                 public void onReplyClick(View view, Reply reply, int floor) {
-                    UiUtils.snackbarText("此功能暂未实现");
+                    ToastUtils.showShort(R.string.no_implement);
 //                    if (DiycodeUtils.checkToken(mApplication)) {
 //                        ARouter.getInstance().build(REPLY_ADD)
 //                                .withInt(EXTRA_REPLY_TYPE, TYPE_NEWS)

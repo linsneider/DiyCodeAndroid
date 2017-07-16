@@ -116,7 +116,6 @@
             android:id="@+id/tv_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_xs"
             android:layout_marginStart="32dp"
             android:layout_marginTop="@dimen/spacing_xs"
             android:textColor="@color/color_4d4d4d"

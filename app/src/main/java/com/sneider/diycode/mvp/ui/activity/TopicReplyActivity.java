@@ -80,15 +80,36 @@ public class TopicReplyActivity extends BaseActivity<TopicReplyPresenter> implem
     }
 
     @Override
-    public void setAdapter(DefaultAdapter adapter) {
-        mRecyclerView.setAdapter(adapter);
-        initRecyclerView();
+    public void showLoading() {
+        Observable.just(1)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(integer -> mSwipeRefreshLayout.setRefreshing(true));
     }
 
     @Override
-    public void setEmpty(boolean isEmpty) {
-        mRecyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
-        mTvNoData.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+    public void hideLoading() {
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void showMessage(String message) {
+        UiUtils.snackbarText(message);
+    }
+
+    @Override
+    public void launchActivity(Intent intent) {
+        UiUtils.startActivity(intent);
+    }
+
+    @Override
+    public void killMyself() {
+        finish();
+    }
+
+    @Override
+    public void setAdapter(DefaultAdapter adapter) {
+        mRecyclerView.setAdapter(adapter);
+        initRecyclerView();
     }
 
     private void initRecyclerView() {
@@ -105,34 +126,9 @@ public class TopicReplyActivity extends BaseActivity<TopicReplyPresenter> implem
     }
 
     @Override
-    public void onRefresh() {
-        mPresenter.getTopicReplies(mTopic.getId(), true);
-        mRecyclerView.setCanloadMore(true);
-    }
-
-    @Subscriber
-    private void onReplyEvent(ReplyEvent event) {
-        mPresenter.getTopicReplies(mTopic.getId(), true);
-        mRecyclerView.setCanloadMore(true);
-    }
-
-    @OnClick(R.id.fab)
-    void clickFab() {
-        if (DiycodeUtils.checkToken(this)) {
-            ARouter.getInstance().build(REPLY_ADD)
-                    .withInt(EXTRA_REPLY_TYPE, TYPE_TOPIC)
-                    .withSerializable(EXTRA_DATA, mTopic)
-                    .navigation();
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
+    public void setEmpty(boolean isEmpty) {
+        mRecyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+        mTvNoData.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -163,30 +159,18 @@ public class TopicReplyActivity extends BaseActivity<TopicReplyPresenter> implem
     }
 
     @Override
-    public void showLoading() {
-        Observable.just(1)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(integer -> mSwipeRefreshLayout.setRefreshing(true));
+    public void onRefresh() {
+        mPresenter.getTopicReplies(mTopic.getId(), true);
+        mRecyclerView.setCanloadMore(true);
     }
 
     @Override
-    public void hideLoading() {
-        mSwipeRefreshLayout.setRefreshing(false);
-    }
-
-    @Override
-    public void showMessage(String message) {
-        UiUtils.snackbarText(message);
-    }
-
-    @Override
-    public void launchActivity(Intent intent) {
-        UiUtils.startActivity(intent);
-    }
-
-    @Override
-    public void killMyself() {
-        finish();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -194,5 +178,21 @@ public class TopicReplyActivity extends BaseActivity<TopicReplyPresenter> implem
         DefaultAdapter.releaseAllHolder(mRecyclerView);
         super.onDestroy();
         mRxPermissions = null;
+    }
+
+    @OnClick(R.id.fab)
+    void clickFab() {
+        if (DiycodeUtils.checkToken(this)) {
+            ARouter.getInstance().build(REPLY_ADD)
+                    .withInt(EXTRA_REPLY_TYPE, TYPE_TOPIC)
+                    .withSerializable(EXTRA_DATA, mTopic)
+                    .navigation();
+        }
+    }
+
+    @Subscriber
+    private void onReplyEvent(ReplyEvent event) {
+        mPresenter.getTopicReplies(mTopic.getId(), true);
+        mRecyclerView.setCanloadMore(true);
     }
 }

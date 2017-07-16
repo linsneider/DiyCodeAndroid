@@ -14,6 +14,7 @@ import com.sneider.diycode.R;
 import com.sneider.diycode.mvp.model.bean.User;
 import com.sneider.diycode.utils.GlideCircleTransform;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 import butterknife.BindView;
@@ -63,12 +64,13 @@ public class UserListAdapter extends DefaultAdapter<User> {
         @Override
         public void setData(User data, int position) {
             String avatarUrl = data.getAvatar_url();
-            if (avatarUrl.contains("diycode")) avatarUrl = avatarUrl.replace("large_avatar", "avatar");
+            if (avatarUrl.contains("diycode"))
+                avatarUrl = avatarUrl.replace("large_avatar", "avatar");
             mImageLoader.loadImage(mAppComponent.application(), GlideImageConfig.builder()
                     .transformation(new GlideCircleTransform(mAppComponent.application()))
                     .url(avatarUrl).imageView(mIvAvatar).build());
             mTvUsername.setText(data.getLogin() + "(" + data.getName() + ")");
-            mTvNumber.setText("第" + data.getId() + "位会员");
+            mTvNumber.setText(MessageFormat.format(mAppComponent.application().getString(R.string.what_number), data.getId()));
 
             itemView.setTag(data);
             itemView.setOnClickListener(this);

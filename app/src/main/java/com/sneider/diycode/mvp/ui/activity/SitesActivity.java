@@ -54,6 +54,30 @@ public class SitesActivity extends BaseActivity<SitesPresenter> implements Sites
     }
 
     @Override
+    public void showLoading() {
+        mRecyclerView.showLoadMore();
+    }
+
+    @Override
+    public void hideLoading() {
+    }
+
+    @Override
+    public void showMessage(String message) {
+        UiUtils.snackbarText(message);
+    }
+
+    @Override
+    public void launchActivity(Intent intent) {
+        UiUtils.startActivity(intent);
+    }
+
+    @Override
+    public void killMyself() {
+        finish();
+    }
+
+    @Override
     public void setAdapter(DefaultAdapter adapter) {
         mRecyclerView.setAdapter(adapter);
         initRecyclerView();
@@ -68,15 +92,6 @@ public class SitesActivity extends BaseActivity<SitesPresenter> implements Sites
             mRecyclerView.showLoadMore();
             mPresenter.getSites(false);
         });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -102,27 +117,12 @@ public class SitesActivity extends BaseActivity<SitesPresenter> implements Sites
     }
 
     @Override
-    public void showLoading() {
-        mRecyclerView.showLoadMore();
-    }
-
-    @Override
-    public void hideLoading() {
-    }
-
-    @Override
-    public void showMessage(String message) {
-        UiUtils.snackbarText(message);
-    }
-
-    @Override
-    public void launchActivity(Intent intent) {
-        UiUtils.startActivity(intent);
-    }
-
-    @Override
-    public void killMyself() {
-        finish();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

@@ -65,7 +65,8 @@ public class NewsListAdapter extends DefaultAdapter<News> {
         @Override
         public void setData(News data, int position) {
             String avatarUrl = data.getUser().getAvatar_url();
-            if (avatarUrl.contains("diycode")) avatarUrl = avatarUrl.replace("large_avatar", "avatar");
+            if (avatarUrl.contains("diycode"))
+                avatarUrl = avatarUrl.replace("large_avatar", "avatar");
             mImageLoader.loadImage(mAppComponent.application(), GlideImageConfig.builder()
                     .transformation(new GlideCircleTransform(mAppComponent.application()))
                     .url(avatarUrl).imageView(mIvAvatar).build());
@@ -77,7 +78,8 @@ public class NewsListAdapter extends DefaultAdapter<News> {
                 mTvTime.setText(MessageFormat.format(itemView.getResources().getString(R.string.publish_time), intervalTime));
             } else {
                 String intervalTime = DateUtils.getIntervalTime(data.getReplied_at());
-                mTvTime.setText(data.getReplies_count() + "条回复 • 最后由" + lastReplyUserLogin + "于" + intervalTime + "回复");
+                mTvTime.setText(MessageFormat.format(mAppComponent.application().getString(R.string.what_who_reply),
+                        data.getReplies_count(), lastReplyUserLogin, intervalTime));
             }
             mTvTitle.setText(data.getTitle());
             mTvAddress.setText(HttpUrl.parse(data.getAddress()).host());

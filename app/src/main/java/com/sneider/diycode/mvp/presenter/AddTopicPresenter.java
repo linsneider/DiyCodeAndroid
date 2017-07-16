@@ -10,6 +10,7 @@ import com.jess.arms.di.scope.ActivityScope;
 import com.jess.arms.integration.AppManager;
 import com.jess.arms.mvp.BasePresenter;
 import com.jess.arms.utils.PermissionUtil;
+import com.sneider.diycode.R;
 import com.sneider.diycode.event.UpdateTopicEvent;
 import com.sneider.diycode.mvp.contract.AddTopicContract;
 import com.sneider.diycode.mvp.model.bean.ImageResult;
@@ -67,12 +68,12 @@ public class AddTopicPresenter extends BasePresenter<AddTopicContract.Model, Add
                     @Override
                     public void onError(@NonNull Throwable e) {
                         super.onError(e);
-                        ToastUtils.showShort("发布失败");
+                        ToastUtils.showShort(R.string.post_failed);
                     }
 
                     @Override
                     public void onNext(@NonNull Topic topic) {
-                        ToastUtils.showShort("发布成功");
+                        ToastUtils.showShort(R.string.post_success);
                         EventBus.getDefault().post(new UpdateTopicEvent());
                         mRootView.killMyself();
                     }
@@ -92,12 +93,12 @@ public class AddTopicPresenter extends BasePresenter<AddTopicContract.Model, Add
                     @Override
                     public void onError(@NonNull Throwable e) {
                         super.onError(e);
-                        ToastUtils.showShort("话题更新失败");
+                        ToastUtils.showShort(R.string.update_failed);
                     }
 
                     @Override
                     public void onNext(@NonNull Topic topic) {
-                        ToastUtils.showShort("话题更新成功");
+                        ToastUtils.showShort(R.string.update_success);
                         EventBus.getDefault().post(new UpdateTopicEvent());
                         mRootView.killMyself();
                     }
@@ -155,12 +156,12 @@ public class AddTopicPresenter extends BasePresenter<AddTopicContract.Model, Add
                     @Override
                     public void onError(@NonNull Throwable e) {
                         super.onError(e);
-                        ToastUtils.showShort("图片上传失败");
+                        ToastUtils.showShort(R.string.upload_failed);
                     }
 
                     @Override
                     public void onNext(@NonNull ImageResult url) {
-                        ToastUtils.showShort("图片上传成功");
+                        ToastUtils.showShort(R.string.upload_success);
                         if (mRootView != null) mRootView.onUploadPhoto(url.getImage_url());
                     }
                 });

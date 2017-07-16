@@ -81,7 +81,8 @@ public class TopicListAdapter extends DefaultAdapter<Topic> {
                 mTvTime.setText(MessageFormat.format(itemView.getResources().getString(R.string.publish_time), intervalTime));
             } else {
                 String intervalTime = DateUtils.getIntervalTime(data.getReplied_at());
-                mTvTime.setText(data.getReplies_count() + "条回复 • 最后由" + lastReplyUserLogin + "于" + intervalTime + "回复");
+                mTvTime.setText(MessageFormat.format(mAppComponent.application().getString(R.string.what_who_reply),
+                        data.getReplies_count(), lastReplyUserLogin, intervalTime));
             }
             mTvTitle.setText(data.getTitle());
 

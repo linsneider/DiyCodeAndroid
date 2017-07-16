@@ -9,6 +9,7 @@ import com.jess.arms.di.scope.ActivityScope;
 import com.jess.arms.integration.AppManager;
 import com.jess.arms.mvp.BasePresenter;
 import com.jess.arms.utils.PermissionUtil;
+import com.sneider.diycode.R;
 import com.sneider.diycode.mvp.contract.AddNewsContract;
 import com.sneider.diycode.mvp.model.bean.News;
 import com.sneider.diycode.mvp.model.bean.NewsNode;
@@ -54,12 +55,12 @@ public class AddNewsPresenter extends BasePresenter<AddNewsContract.Model, AddNe
                     @Override
                     public void onError(@NonNull Throwable e) {
                         super.onError(e);
-                        ToastUtils.showShort("创建失败");
+                        ToastUtils.showShort(R.string.add_failed);
                     }
 
                     @Override
                     public void onNext(@NonNull News news) {
-                        ToastUtils.showShort("创建成功");
+                        ToastUtils.showShort(R.string.add_success);
                         mRootView.killMyself();
                     }
                 });

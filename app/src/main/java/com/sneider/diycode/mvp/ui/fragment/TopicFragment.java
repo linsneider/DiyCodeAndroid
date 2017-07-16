@@ -66,24 +66,6 @@ public class TopicFragment extends BaseFragment<TopicFragmentPresenter> implemen
     }
 
     @Override
-    public void onRefresh() {
-        mPresenter.getTopics(true);
-        mRecyclerView.setCanloadMore(true);
-    }
-
-    @Subscriber
-    private void onReplyEvent(ReplyEvent event) {
-        mPresenter.getTopics(true);
-        mRecyclerView.setCanloadMore(true);
-    }
-
-    @Subscriber
-    private void onUpdateTopic(UpdateTopicEvent event) {
-        mPresenter.getTopics(true);
-        mRecyclerView.setCanloadMore(true);
-    }
-
-    @Override
     public void showLoading() {
         Observable.just(1)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -147,8 +129,8 @@ public class TopicFragment extends BaseFragment<TopicFragmentPresenter> implemen
 
     @Override
     public void onFavoriteSuccess() {
-        Snackbar.make(mSwipeRefreshLayout, "已收藏", Snackbar.LENGTH_SHORT)
-                .setAction("查看我的收藏", v -> {
+        Snackbar.make(mSwipeRefreshLayout, R.string.favorited, Snackbar.LENGTH_SHORT)
+                .setAction(R.string.view_my_favorite, v -> {
                     if (DiycodeUtils.checkToken(getContext())) {
                         ARouter.getInstance().build(TOPIC_LIST)
                                 .withInt(EXTRA_TOPIC_TYPE, TOPIC_FAVORITES)
@@ -164,9 +146,27 @@ public class TopicFragment extends BaseFragment<TopicFragmentPresenter> implemen
     }
 
     @Override
+    public void onRefresh() {
+        mPresenter.getTopics(true);
+        mRecyclerView.setCanloadMore(true);
+    }
+
+    @Override
     public void onDestroy() {
         DefaultAdapter.releaseAllHolder(mRecyclerView);
         super.onDestroy();
         mRxPermissions = null;
+    }
+
+    @Subscriber
+    private void onReplyEvent(ReplyEvent event) {
+        mPresenter.getTopics(true);
+        mRecyclerView.setCanloadMore(true);
+    }
+
+    @Subscriber
+    private void onUpdateTopic(UpdateTopicEvent event) {
+        mPresenter.getTopics(true);
+        mRecyclerView.setCanloadMore(true);
     }
 }

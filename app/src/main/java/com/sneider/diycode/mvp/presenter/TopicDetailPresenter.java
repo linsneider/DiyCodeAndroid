@@ -6,6 +6,7 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.jess.arms.di.scope.ActivityScope;
 import com.jess.arms.integration.AppManager;
 import com.jess.arms.mvp.BasePresenter;
+import com.sneider.diycode.R;
 import com.sneider.diycode.mvp.contract.TopicDetailContract;
 import com.sneider.diycode.mvp.model.bean.Like;
 import com.sneider.diycode.mvp.model.bean.Ok;
@@ -70,7 +71,7 @@ public class TopicDetailPresenter extends BasePresenter<TopicDetailContract.Mode
                     @Override
                     public void onError(@NonNull Throwable e) {
                         super.onError(e);
-                        ToastUtils.showShort("收藏失败");
+                        ToastUtils.showShort(R.string.favorite_failed);
                     }
 
                     @Override
@@ -90,7 +91,7 @@ public class TopicDetailPresenter extends BasePresenter<TopicDetailContract.Mode
                     @Override
                     public void onError(@NonNull Throwable e) {
                         super.onError(e);
-                        ToastUtils.showShort("取消收藏失败");
+                        ToastUtils.showShort(R.string.unfavorite_failed);
                     }
 
                     @Override
@@ -110,7 +111,7 @@ public class TopicDetailPresenter extends BasePresenter<TopicDetailContract.Mode
                     @Override
                     public void onError(@NonNull Throwable e) {
                         super.onError(e);
-                        ToastUtils.showShort("点赞失败");
+                        ToastUtils.showShort(R.string.like_failed);
                     }
 
                     @Override
@@ -130,7 +131,7 @@ public class TopicDetailPresenter extends BasePresenter<TopicDetailContract.Mode
                     @Override
                     public void onError(@NonNull Throwable e) {
                         super.onError(e);
-                        ToastUtils.showShort("取消点赞失败");
+                        ToastUtils.showShort(R.string.unlike_failed);
                     }
 
                     @Override

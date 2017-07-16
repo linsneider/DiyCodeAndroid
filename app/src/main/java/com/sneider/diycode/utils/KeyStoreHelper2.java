@@ -87,7 +87,7 @@ public class KeyStoreHelper2 {
                 SecurityConstants.KEYSTORE_PROVIDER_ANDROID_KEYSTORE);
         kpGenerator.initialize(spec);
         KeyPair kp = kpGenerator.generateKeyPair();
-        Log.d(TAG, "Public Key is: " + kp.getPublic().toString());
+        Log.e(TAG, "Public Key is: " + kp.getPublic().toString());
 
     }
 
@@ -111,7 +111,7 @@ public class KeyStoreHelper2 {
                             .setUserAuthenticationRequired(requireAuth)
                             .build());
             KeyPair keyPair = keyPairGenerator.generateKeyPair();
-            Log.d(TAG, "Public Key is: " + keyPair.getPublic().toString());
+            Log.e(TAG, "Public Key is: " + keyPair.getPublic().toString());
 
         } catch (NoSuchProviderException | NoSuchAlgorithmException | InvalidAlgorithmParameterException e) {
             throw new RuntimeException(e);
@@ -160,14 +160,14 @@ public class KeyStoreHelper2 {
             KeyStore.Entry entry = ks.getEntry(alias, null);
 
             if (entry == null) {
-                Log.w(TAG, "No key found under alias: " + alias);
-                Log.w(TAG, "Exiting signData()...");
+                Log.e(TAG, "No key found under alias: " + alias);
+                Log.e(TAG, "Exiting signData()...");
                 return null;
             }
 
             if (!(entry instanceof KeyStore.PrivateKeyEntry)) {
-                Log.w(TAG, "Not an instance of a PrivateKeyEntry");
-                Log.w(TAG, "Exiting signData()...");
+                Log.e(TAG, "Not an instance of a PrivateKeyEntry");
+                Log.e(TAG, "Exiting signData()...");
                 return null;
             }
             return (KeyStore.PrivateKeyEntry) entry;

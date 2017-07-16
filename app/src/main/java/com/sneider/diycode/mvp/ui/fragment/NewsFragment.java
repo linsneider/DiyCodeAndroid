@@ -54,12 +54,6 @@ public class NewsFragment extends BaseFragment<NewsFragmentPresenter> implements
     }
 
     @Override
-    public void onRefresh() {
-        mPresenter.getNews(true);
-        mRecyclerView.setCanloadMore(true);
-    }
-
-    @Override
     public void showLoading() {
         Observable.just(1)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -124,6 +118,12 @@ public class NewsFragment extends BaseFragment<NewsFragmentPresenter> implements
     @Override
     public RxPermissions getRxPermissions() {
         return mRxPermissions;
+    }
+
+    @Override
+    public void onRefresh() {
+        mPresenter.getNews(true);
+        mRecyclerView.setCanloadMore(true);
     }
 
     @Override

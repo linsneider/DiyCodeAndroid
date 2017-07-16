@@ -11,8 +11,8 @@ import com.jess.arms.utils.PermissionUtil;
 import com.sneider.diycode.mvp.contract.ProjectFragmentContract;
 import com.sneider.diycode.mvp.model.bean.Project;
 import com.sneider.diycode.mvp.ui.adapter.ProjectListAdapter;
-import com.sneider.diycode.utils.DiycodeUtils;
 import com.sneider.diycode.utils.Constant;
+import com.sneider.diycode.utils.DiycodeUtils;
 import com.sneider.diycode.utils.RxUtils;
 
 import java.util.ArrayList;

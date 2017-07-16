@@ -68,15 +68,36 @@ public class NotificationListActivity extends BaseActivity<NotificationListPrese
     }
 
     @Override
-    public void setAdapter(DefaultAdapter adapter) {
-        mRecyclerView.setAdapter(adapter);
-        initRecyclerView();
+    public void showLoading() {
+        Observable.just(1)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(integer -> mSwipeRefreshLayout.setRefreshing(true));
     }
 
     @Override
-    public void setEmpty(boolean isEmpty) {
-        mRecyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
-        mTvNoData.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+    public void hideLoading() {
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void showMessage(String message) {
+        UiUtils.snackbarText(message);
+    }
+
+    @Override
+    public void launchActivity(Intent intent) {
+        UiUtils.startActivity(intent);
+    }
+
+    @Override
+    public void killMyself() {
+        finish();
+    }
+
+    @Override
+    public void setAdapter(DefaultAdapter adapter) {
+        mRecyclerView.setAdapter(adapter);
+        initRecyclerView();
     }
 
     private void initRecyclerView() {
@@ -93,33 +114,9 @@ public class NotificationListActivity extends BaseActivity<NotificationListPrese
     }
 
     @Override
-    public void onRefresh() {
-        mPresenter.getNotifications(true);
-        mRecyclerView.setCanloadMore(true);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_toolbar_notification_activity, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            finish();
-        } else if (id == R.id.action_clear_all) {
-            new MaterialDialog.Builder(this)
-                    .content("确定要清空全部通知吗？")
-                    .contentColor(color_4d4d4d)
-                    .positiveText(R.string.confirm)
-                    .onPositive((dialog, which) -> mPresenter.deleteAllNotifications())
-                    .negativeText(R.string.cancel)
-                    .negativeColor(color_999999)
-                    .show();
-        }
-        return super.onOptionsItemSelected(item);
+    public void setEmpty(boolean isEmpty) {
+        mRecyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+        mTvNoData.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -150,30 +147,33 @@ public class NotificationListActivity extends BaseActivity<NotificationListPrese
     }
 
     @Override
-    public void showLoading() {
-        Observable.just(1)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(integer -> mSwipeRefreshLayout.setRefreshing(true));
+    public void onRefresh() {
+        mPresenter.getNotifications(true);
+        mRecyclerView.setCanloadMore(true);
     }
 
     @Override
-    public void hideLoading() {
-        mSwipeRefreshLayout.setRefreshing(false);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_toolbar_notification_activity, menu);
+        return true;
     }
 
     @Override
-    public void showMessage(String message) {
-        UiUtils.snackbarText(message);
-    }
-
-    @Override
-    public void launchActivity(Intent intent) {
-        UiUtils.startActivity(intent);
-    }
-
-    @Override
-    public void killMyself() {
-        finish();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            finish();
+        } else if (id == R.id.action_clear_all) {
+            new MaterialDialog.Builder(this)
+                    .content(R.string.confirm_clear_all)
+                    .contentColor(color_4d4d4d)
+                    .positiveText(R.string.confirm)
+                    .onPositive((dialog, which) -> mPresenter.deleteAllNotifications())
+                    .negativeText(R.string.cancel)
+                    .negativeColor(color_999999)
+                    .show();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

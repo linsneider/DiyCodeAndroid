@@ -10,6 +10,7 @@ import com.jess.arms.di.scope.ActivityScope;
 import com.jess.arms.integration.AppManager;
 import com.jess.arms.mvp.BasePresenter;
 import com.jess.arms.utils.PermissionUtil;
+import com.sneider.diycode.R;
 import com.sneider.diycode.event.GetUnreadCountEvent;
 import com.sneider.diycode.mvp.contract.NotificationListContract;
 import com.sneider.diycode.mvp.model.bean.Count;
@@ -21,6 +22,7 @@ import com.sneider.diycode.utils.RxUtils;
 
 import org.simple.eventbus.EventBus;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,7 +101,7 @@ public class NotificationListPresenter extends BasePresenter<NotificationListCon
                 }
             });
             mAdapter.setOnItemLongClickListener((view, notification) ->
-                    new MaterialDialog.Builder(mAppManager.getCurrentActivity()).items("删除")
+                    new MaterialDialog.Builder(mAppManager.getCurrentActivity()).items(R.array.delete)
                             .itemsCallback((dialog, itemView, position, text) ->
                                     deleteNotification(notification)).show());
         }
@@ -165,7 +167,7 @@ public class NotificationListPresenter extends BasePresenter<NotificationListCon
                     @Override
                     public void onError(@NonNull Throwable e) {
                         super.onError(e);
-                        ToastUtils.showShort("删除失败");
+                        ToastUtils.showShort(R.string.delete_failed);
                     }
 
                     @Override
@@ -187,7 +189,7 @@ public class NotificationListPresenter extends BasePresenter<NotificationListCon
                     @Override
                     public void onError(@NonNull Throwable e) {
                         super.onError(e);
-                        ToastUtils.showShort("删除失败");
+                        ToastUtils.showShort(R.string.delete_failed);
                     }
 
                     @Override
@@ -208,12 +210,10 @@ public class NotificationListPresenter extends BasePresenter<NotificationListCon
                     @Override
                     public void onNext(@NonNull Count data) {
                         int count = data.getCount();
-                        if (count > 0) {
-                            mRootView.setSubtitle(data.getCount() + "条未读");
-                        } else {
-                            mRootView.setSubtitle("没有未读的通知");
-                        }
-                        EventBus.getDefault().post(new GetUnreadCountEvent(data.getCount() > 0 ? true : false));
+                        mRootView.setSubtitle(count > 0 ?
+                                MessageFormat.format(mApplication.getString(R.string.what_unread), data.getCount())
+                                : mApplication.getString(R.string.no_unread));
+                        EventBus.getDefault().post(new GetUnreadCountEvent(data.getCount() > 0));
                     }
                 });
     }
@@ -228,12 +228,12 @@ public class NotificationListPresenter extends BasePresenter<NotificationListCon
                     @Override
                     public void onError(@NonNull Throwable e) {
                         super.onError(e);
-                        ToastUtils.showShort("设置已读失败");
+                        ToastUtils.showShort(R.string.read_failed);
                     }
 
                     @Override
                     public void onNext(@NonNull Ok data) {
-                        ToastUtils.showShort("设置已读成功");
+                        ToastUtils.showShort(R.string.read_success);
                     }
                 });
     }

@@ -25,6 +25,7 @@ import com.sneider.diycode.R;
 import com.sneider.diycode.app.BaseActivity;
 import com.sneider.diycode.di.component.DaggerTopicDetailComponent;
 import com.sneider.diycode.di.module.TopicDetailModule;
+import com.sneider.diycode.event.LoginEvent;
 import com.sneider.diycode.event.ReplyEvent;
 import com.sneider.diycode.event.UpdateTopicEvent;
 import com.sneider.diycode.mvp.contract.TopicDetailContract;
@@ -156,28 +157,83 @@ public class TopicDetailActivity extends BaseActivity<TopicDetailPresenter> impl
     }
 
     @Override
-    protected void onDestroy() {
-        mAppComponent.imageLoader().clear(this, GlideImageConfig.builder().imageViews(mIvAvatar).build());
-        clearWebViewResource();
-        super.onDestroy();
+    public void onGetTopicDetail(Topic topic) {
+        if (topic == null) return;
+        mTopic = topic;
+        String avatarUrl = mTopic.getUser().getAvatar_url();
+        if (avatarUrl.contains("diycode"))
+            avatarUrl = avatarUrl.replace("large_avatar", "avatar");
+        mAppComponent.imageLoader().loadImage(mAppComponent.application(), GlideImageConfig.builder()
+                .transformation(new GlideCircleTransform(mAppComponent.application()))
+                .url(avatarUrl).imageView(mIvAvatar).build());
+        mTvName.setText(mTopic.getUser().getLogin());
+        mTvNodeName.setText(mTopic.getNode_name());
+        String intervalTime = DateUtils.getIntervalTime(mTopic.getCreated_at());
+        mTvTime.setText(MessageFormat.format(getString(R.string.publish_time), intervalTime));
+        mTvTitle.setText(mTopic.getTitle());
+        mTvReplyCount.setText(mTopic.getReplies_count() == 0 ? "" : String.valueOf(mTopic.getReplies_count()));
+        mTvHit.setText(MessageFormat.format(getResources().getString(R.string.read_count), mTopic.getHits()));
+
+        mWvContent = new WebView(getApplication());
+        mWvContent.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
+        mWvContainer.addView(mWvContent);
+        WebSettings settings = mWvContent.getSettings();
+        settings.setJavaScriptEnabled(true);
+        WebImageListener listener = new WebImageListener(this, ImageActivity.class);
+        mWvContent.addJavascriptInterface(listener, "listener");
+        mWvContent.setWebViewClient(new WebViewClient() {
+            @SuppressWarnings("deprecation")
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if (url.startsWith("https://www.diycode.cc/topics/")) {
+                    ARouter.getInstance().build(TOPIC_DETAIL)
+                            .withInt(EXTRA_TOPIC_ID, Integer.valueOf(url.substring(30)))
+                            .navigation();
+                    return true;
+                }
+                DiycodeUtils.openWebActivity(url);
+                return true;
+            }
+        });
+        mWvContent.loadDataWithBaseURL(null, WebViewUtils.convertTopicContent(mTopic.getBody_html()), "text/html", "utf-8", null);
+
+        mBtnLike.setImageResource(mTopic.isLiked() ? R.drawable.ic_like_yes : R.drawable.ic_like);
+        mTvLikeCount.setTextColor(mTopic.isLiked() ? colorAccent : color_62646c);
+        mTvLikeCount.setText(mTopic.getLikes_count() > 0 ? String.valueOf(mTopic.getLikes_count()) : "");
+        mBtnFavorite.setImageResource(mTopic.isFavorited() ? R.drawable.ic_favorite_yes : R.drawable.ic_favorite);
+        mBtnEdit.setVisibility(mTopic.getAbilities().isUpdate() ? View.VISIBLE : View.GONE);
     }
 
-    private void clearWebViewResource() {
-        if (mWvContent != null) {
-            mWvContent.removeAllViews();
-            // in android 5.1(sdk:21) we should invoke this to avoid memory leak
-            // see (https://coolpers.github.io/webview/memory/leak/2015/07/16/android-5.1-webview-memory-leak.html)
-            ((ViewGroup) mWvContent.getParent()).removeView(mWvContent);
-            mWvContent.setTag(null);
-            mWvContent.clearHistory();
-            mWvContent.destroy();
-            mWvContent = null;
+    @Override
+    public void onFavoriteTopic() {
+        mTopic.setFavorited(!mTopic.isFavorited());
+        mBtnFavorite.setImageResource(mTopic.isFavorited() ? R.drawable.ic_favorite_yes : R.drawable.ic_favorite);
+        if (mTopic.isFavorited()) {
+            Snackbar.make(mCoordinatorLayout, R.string.favorited, Snackbar.LENGTH_SHORT)
+                    .setAction(R.string.view_my_favorite, v -> {
+                        if (DiycodeUtils.checkToken(this)) {
+                            ARouter.getInstance().build(TOPIC_LIST)
+                                    .withInt(EXTRA_TOPIC_TYPE, TOPIC_FAVORITES)
+                                    .withString(EXTRA_TOPIC_USER, DiycodeUtils.getUser(this).getLogin())
+                                    .navigation();
+                        }
+                    }).show();
         }
     }
 
-    @Subscriber
-    private void onReplyEvent(ReplyEvent event) {
-        initTopic();
+    @Override
+    public void onLikeTopic(Like like) {
+        mTopic.setLiked(!mTopic.isLiked());
+        mBtnLike.setImageResource(mTopic.isLiked() ? R.drawable.ic_like_yes : R.drawable.ic_like);
+        mTvLikeCount.setTextColor(mTopic.isLiked() ? colorAccent : color_62646c);
+        mTvLikeCount.setText(like.getCount() > 0 ? String.valueOf(like.getCount()) : "");
+    }
+
+    @Override
+    public void setLayout(boolean isNormal) {
+        mNormalLayout.setVisibility(isNormal ? View.VISIBLE : View.GONE);
+        mErrorLayout.setVisibility(isNormal ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -197,6 +253,26 @@ public class TopicDetailActivity extends BaseActivity<TopicDetailPresenter> impl
             DiycodeUtils.openWebActivity("https://www.diycode.cc/topics/" + mTopic.getId());
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        mAppComponent.imageLoader().clear(this, GlideImageConfig.builder().imageViews(mIvAvatar).build());
+        clearWebViewResource();
+        super.onDestroy();
+    }
+
+    private void clearWebViewResource() {
+        if (mWvContent != null) {
+            mWvContent.removeAllViews();
+            // in android 5.1(sdk:21) we should invoke this to avoid memory leak
+            // see (https://coolpers.github.io/webview/memory/leak/2015/07/16/android-5.1-webview-memory-leak.html)
+            ((ViewGroup) mWvContent.getParent()).removeView(mWvContent);
+            mWvContent.setTag(null);
+            mWvContent.clearHistory();
+            mWvContent.destroy();
+            mWvContent = null;
+        }
     }
 
     @OnClick({R.id.iv_avatar, R.id.tv_name})
@@ -263,87 +339,13 @@ public class TopicDetailActivity extends BaseActivity<TopicDetailPresenter> impl
         initTopic();
     }
 
-    @Override
-    public void onGetTopicDetail(Topic topic) {
-        if (topic == null) return;
-        mTopic = topic;
-        String avatarUrl = mTopic.getUser().getAvatar_url();
-        if (avatarUrl.contains("diycode"))
-            avatarUrl = avatarUrl.replace("large_avatar", "avatar");
-        mAppComponent.imageLoader().loadImage(mAppComponent.application(), GlideImageConfig.builder()
-                .transformation(new GlideCircleTransform(mAppComponent.application()))
-                .url(avatarUrl).imageView(mIvAvatar).build());
-        mTvName.setText(mTopic.getUser().getLogin());
-        mTvNodeName.setText(mTopic.getNode_name());
-        String intervalTime = DateUtils.getIntervalTime(mTopic.getCreated_at());
-        mTvTime.setText(MessageFormat.format(getString(R.string.publish_time), intervalTime));
-        mTvTitle.setText(mTopic.getTitle());
-        if (mTopic.getReplies_count() == 0) {
-            mTvReplyCount.setText("");
-        } else {
-            mTvReplyCount.setText(String.valueOf(mTopic.getReplies_count()));
-        }
-        mTvHit.setText(MessageFormat.format(getResources().getString(R.string.read_count), mTopic.getHits()));
-
-        mWvContent = new WebView(getApplication());
-        mWvContent.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
-        mWvContainer.addView(mWvContent);
-        WebSettings settings = mWvContent.getSettings();
-        settings.setJavaScriptEnabled(true);
-        WebImageListener listener = new WebImageListener(this, ImageActivity.class);
-        mWvContent.addJavascriptInterface(listener, "listener");
-        mWvContent.setWebViewClient(new WebViewClient() {
-            @SuppressWarnings("deprecation")
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.startsWith("https://www.diycode.cc/topics/")) {
-                    ARouter.getInstance().build(TOPIC_DETAIL)
-                            .withInt(EXTRA_TOPIC_ID, Integer.valueOf(url.substring(30)))
-                            .navigation();
-                    return true;
-                }
-                DiycodeUtils.openWebActivity(url);
-                return true;
-            }
-        });
-        mWvContent.loadDataWithBaseURL(null, WebViewUtils.convertTopicContent(mTopic.getBody_html()), "text/html", "utf-8", null);
-
-        mBtnLike.setImageResource(mTopic.isLiked() ? R.drawable.ic_like_yes : R.drawable.ic_like);
-        mTvLikeCount.setTextColor(mTopic.isLiked() ? colorAccent : color_62646c);
-        mTvLikeCount.setText(mTopic.getLikes_count() > 0 ? String.valueOf(mTopic.getLikes_count()) : "");
-        mBtnFavorite.setImageResource(mTopic.isFavorited() ? R.drawable.ic_favorite_yes : R.drawable.ic_favorite);
-        mBtnEdit.setVisibility(mTopic.getAbilities().isUpdate() ? View.VISIBLE : View.GONE);
+    @Subscriber
+    private void onReplyEvent(ReplyEvent event) {
+        initTopic();
     }
 
-    @Override
-    public void onFavoriteTopic() {
-        mTopic.setFavorited(!mTopic.isFavorited());
-        mBtnFavorite.setImageResource(mTopic.isFavorited() ? R.drawable.ic_favorite_yes : R.drawable.ic_favorite);
-        if (mTopic.isFavorited()) {
-            Snackbar.make(mCoordinatorLayout, "已收藏", Snackbar.LENGTH_SHORT)
-                    .setAction("查看我的收藏", v -> {
-                        if (DiycodeUtils.checkToken(this)) {
-                            ARouter.getInstance().build(TOPIC_LIST)
-                                    .withInt(EXTRA_TOPIC_TYPE, TOPIC_FAVORITES)
-                                    .withString(EXTRA_TOPIC_USER, DiycodeUtils.getUser(this).getLogin())
-                                    .navigation();
-                        }
-                    }).show();
-        }
-    }
-
-    @Override
-    public void onLikeTopic(Like like) {
-        mTopic.setLiked(!mTopic.isLiked());
-        mBtnLike.setImageResource(mTopic.isLiked() ? R.drawable.ic_like_yes : R.drawable.ic_like);
-        mTvLikeCount.setTextColor(mTopic.isLiked() ? colorAccent : color_62646c);
-        mTvLikeCount.setText(like.getCount() > 0 ? String.valueOf(like.getCount()) : "");
-    }
-
-    @Override
-    public void setLayout(boolean isNormal) {
-        mNormalLayout.setVisibility(isNormal ? View.VISIBLE : View.GONE);
-        mErrorLayout.setVisibility(isNormal ? View.GONE : View.VISIBLE);
+    @Subscriber
+    private void onLoginSuccess(LoginEvent event) {
+        initTopic();
     }
 }

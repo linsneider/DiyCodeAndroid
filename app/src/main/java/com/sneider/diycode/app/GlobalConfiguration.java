@@ -5,6 +5,7 @@ import android.content.Context;
 import android.net.ParseException;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.aitangba.swipeback.ActivityLifecycleHelper;
 import com.alibaba.android.arouter.launcher.ARouter;
@@ -195,6 +196,7 @@ public class GlobalConfiguration implements ConfigModule {
                 if (!TextUtils.isEmpty(tokenJson)) {
                     try {
                         tokenJson = KeyStoreHelper.decrypt(Constant.KEYSTORE_KEY_ALIAS, tokenJson);
+                        Log.e("tokenJson--------------", tokenJson);
                         Token token = appComponent.gson().fromJson(tokenJson, Token.class);
                         if (token != null) {
                             DiycodeUtils.setToken(application, token);

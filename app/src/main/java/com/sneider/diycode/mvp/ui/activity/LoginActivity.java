@@ -86,32 +86,6 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @OnClick(R.id.btn_login)
-    void clickLogin() {
-        String username = mEtUsername.getText().toString().trim();
-        String password = mEtPassword.getText().toString().trim();
-        mPresenter.validateCredentials(username, password);
-    }
-
-    @OnClick(R.id.btn_register)
-    void clickRegister() {
-        DiycodeUtils.openWebActivity("https://www.diycode.cc/account/sign_up");
-    }
-
-    @OnClick(R.id.btn_find_password)
-    void clickFindPassword() {
-        DiycodeUtils.openWebActivity("https://www.diycode.cc/account/password/new");
-    }
-
-    @Override
     public void setUsernameError() {
         mUsername.setError(getString(R.string.please_input_username));
     }
@@ -138,5 +112,31 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
     @Override
     public void loginFailed() {
         ToastUtils.showShort(R.string.login_failed);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @OnClick(R.id.btn_login)
+    void clickLogin() {
+        String username = mEtUsername.getText().toString().trim();
+        String password = mEtPassword.getText().toString().trim();
+        mPresenter.validateCredentials(username, password);
+    }
+
+    @OnClick(R.id.btn_register)
+    void clickRegister() {
+        DiycodeUtils.openWebActivity("https://www.diycode.cc/account/sign_up");
+    }
+
+    @OnClick(R.id.btn_find_password)
+    void clickFindPassword() {
+        DiycodeUtils.openWebActivity("https://www.diycode.cc/account/password/new");
     }
 }

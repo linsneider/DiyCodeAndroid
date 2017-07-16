@@ -12,8 +12,8 @@ import com.sneider.diycode.app.ARouterPaths;
 import com.sneider.diycode.mvp.contract.NewsFragmentContract;
 import com.sneider.diycode.mvp.model.bean.News;
 import com.sneider.diycode.mvp.ui.adapter.NewsListAdapter;
-import com.sneider.diycode.utils.DiycodeUtils;
 import com.sneider.diycode.utils.Constant;
+import com.sneider.diycode.utils.DiycodeUtils;
 import com.sneider.diycode.utils.RxUtils;
 
 import java.util.ArrayList;

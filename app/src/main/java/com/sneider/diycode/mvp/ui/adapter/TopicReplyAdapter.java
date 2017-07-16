@@ -94,9 +94,7 @@ public class TopicReplyAdapter extends DefaultAdapter<Reply> {
                 String intervalTime = DateUtils.getIntervalTime(data.getCreated_at());
                 mTvTime.setText(intervalTime);
                 mBtnEditReply.setVisibility(data.getAbilities().isUpdate() ? View.VISIBLE : View.GONE);
-                if (data.getLikes_count() > 0) {
-                    mTvLikeCount.setText(String.valueOf(data.getLikes_count()));
-                }
+                mTvLikeCount.setText(data.getLikes_count() > 0 ? String.valueOf(data.getLikes_count()) : "");
 //                int max = ScreenUtils.getScreenWidth() - itemView.getPaddingLeft()
 //                        - itemView.getPaddingRight() - SizeUtils.dp2px(32);
 //                HtmlUtils.parseHtmlAndSetText(data.getBody_html(), mTvContent, mCallback, max);

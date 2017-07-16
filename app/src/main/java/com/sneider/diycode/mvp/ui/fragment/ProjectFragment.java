@@ -24,7 +24,7 @@ import butterknife.BindView;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
-public class ProjectFragment extends BaseFragment<ProjectFragmentPresenter> implements ProjectFragmentContract.View,  SwipeRefreshLayout.OnRefreshListener {
+public class ProjectFragment extends BaseFragment<ProjectFragmentPresenter> implements ProjectFragmentContract.View, SwipeRefreshLayout.OnRefreshListener {
 
     @BindView(R.id.srl) SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.list) LoadMoreRecyclerView mRecyclerView;
@@ -51,12 +51,6 @@ public class ProjectFragment extends BaseFragment<ProjectFragmentPresenter> impl
 
     @Override
     public void setData(Object data) {
-    }
-
-    @Override
-    public void onRefresh() {
-        mPresenter.getProjects(true);
-        mRecyclerView.setCanloadMore(true);
     }
 
     @Override
@@ -124,6 +118,12 @@ public class ProjectFragment extends BaseFragment<ProjectFragmentPresenter> impl
     @Override
     public RxPermissions getRxPermissions() {
         return mRxPermissions;
+    }
+
+    @Override
+    public void onRefresh() {
+        mPresenter.getProjects(true);
+        mRecyclerView.setCanloadMore(true);
     }
 
     @Override

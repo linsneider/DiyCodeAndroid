@@ -40,6 +40,7 @@ import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import org.simple.eventbus.Subscriber;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 import butterknife.BindView;
@@ -94,21 +95,15 @@ public class TopicListActivity extends BaseActivity<TopicListPresenter> implemen
         User user = DiycodeUtils.getUser(this);
         switch (mTopicType) {
             case TOPIC_CREATE:
-                if (user != null && mUsername.equals(user.getLogin())) {
-                    mToolbar.setTitle(R.string.my_topic);
-                } else {
-                    mToolbar.setTitle(mUsername + " 的帖子");
-                }
+                mToolbar.setTitle(user != null && mUsername.equals(user.getLogin()) ? getString(R.string.my_topic) :
+                        MessageFormat.format(getString(R.string.who_topic), mUsername));
                 break;
             case TOPIC_FAVORITES:
-                if (user != null && mUsername.equals(user.getLogin())) {
-                    mToolbar.setTitle(R.string.my_favorite);
-                } else {
-                    mToolbar.setTitle(mUsername + " 的收藏");
-                }
+                mToolbar.setTitle(user != null && mUsername.equals(user.getLogin()) ? getString(R.string.my_favorite) :
+                        MessageFormat.format(getString(R.string.who_favorite), mUsername));
                 break;
             case TOPIC_BY_NODE_ID:
-                mToolbar.setTitle("社区 : " + getIntent().getStringExtra(EXTRA_TOPIC_NODE_NAME));
+                mToolbar.setTitle(MessageFormat.format(getString(R.string.what_topics), getIntent().getStringExtra(EXTRA_TOPIC_NODE_NAME)));
                 mNodeId = getIntent().getIntExtra(EXTRA_TOPIC_NODE_ID, 0);
                 break;
             default:
@@ -120,31 +115,6 @@ public class TopicListActivity extends BaseActivity<TopicListPresenter> implemen
 
         mPresenter.initAdapter(mTopicType, mUsername);
         mPresenter.getTopics(mTopicType, mUsername, mNodeId, true);
-    }
-
-    @Override
-    public void setAdapter(DefaultAdapter adapter) {
-        mRecyclerView.setAdapter(adapter);
-        initRecyclerView();
-    }
-
-    @Override
-    public void setEmpty(boolean isEmpty) {
-        mRecyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
-        mTvNoData.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
-    }
-
-    private void initRecyclerView() {
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-        LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        mRecyclerView.setLayoutManager(manager);
-        mRecyclerView.setLoadMoreListener(() -> mPresenter.getTopics(mTopicType, mUsername, mNodeId, false));
-        mRecyclerView.setOnClickReloadListener(() -> {
-            mRecyclerView.setCanloadMore(true);
-            mRecyclerView.showLoadMore();
-            mPresenter.getTopics(mTopicType, mUsername, mNodeId, false);
-        });
     }
 
     private void initPopupWindow() {
@@ -166,7 +136,7 @@ public class TopicListActivity extends BaseActivity<TopicListPresenter> implemen
         listNode.setLayoutManager(nodeManager);
         mNodeListAdapter = new NodeListAdapter(null);
         mNodeListAdapter.setOnItemClickListener((view2, data) -> {
-            mToolbar.setTitle("社区 : " + data.getName());
+            mToolbar.setTitle(MessageFormat.format(getString(R.string.what_topics), data.getName()));
             mNodeId = data.getId();
             mRecyclerView.setCanloadMore(true);
             mPresenter.getTopics(mTopicType, mUsername, mNodeId, true);
@@ -189,80 +159,6 @@ public class TopicListActivity extends BaseActivity<TopicListPresenter> implemen
         mWindow.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
         mWindow.setFocusable(true);
         mWindow.setBackgroundDrawable(new BitmapDrawable());
-    }
-
-    @Override
-    public void onRefresh() {
-        mPresenter.getTopics(mTopicType, mUsername, mNodeId, true);
-        mRecyclerView.setCanloadMore(true);
-    }
-
-    @Subscriber
-    private void onReplyEvent(ReplyEvent event) {
-        mPresenter.getTopics(mTopicType, mUsername, mNodeId, true);
-        mRecyclerView.setCanloadMore(true);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (mTopicType == TOPIC_BY_NODE_ID) {
-            getMenuInflater().inflate(R.menu.menu_toolbar_list_activity, menu);
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            finish();
-        } else if (id == R.id.action_select_node) {
-            if (mWindow != null) {
-                mWindow.showAsDropDown(mToolbar);
-            }
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onFavoriteSuccess() {
-        Snackbar.make(mSwipeRefreshLayout, "已收藏", Snackbar.LENGTH_SHORT)
-                .setAction("查看我的收藏", v -> {
-                    if (DiycodeUtils.checkToken(TopicListActivity.this)) {
-                        ARouter.getInstance().build(TOPIC_LIST)
-                                .withInt(EXTRA_TOPIC_TYPE, TOPIC_FAVORITES)
-                                .withString(EXTRA_TOPIC_USER, DiycodeUtils.getUser(this).getLogin())
-                                .navigation();
-                    }
-                }).show();
-    }
-
-    @Override
-    public void onGetNodes(List<Section> sections) {
-        mSectionListAdapter.addData(sections);
-        mNodeListAdapter.addData(sections.get(0).getNodes());
-    }
-
-    @Override
-    public void onLoadMoreComplete() {
-        mRecyclerView.loadMoreComplete();
-    }
-
-    @Override
-    public void onLoadMoreError() {
-        mRecyclerView.loadMoreError();
-        mRecyclerView.setCanloadMore(false);
-    }
-
-    @Override
-    public void onLoadMoreEnd() {
-        mRecyclerView.loadMoreEnd();
-        mRecyclerView.setCanloadMore(false);
-    }
-
-    @Override
-    public RxPermissions getRxPermissions() {
-        return mRxPermissions;
     }
 
     @Override
@@ -293,9 +189,108 @@ public class TopicListActivity extends BaseActivity<TopicListPresenter> implemen
     }
 
     @Override
+    public void setAdapter(DefaultAdapter adapter) {
+        mRecyclerView.setAdapter(adapter);
+        initRecyclerView();
+    }
+
+    private void initRecyclerView() {
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        mRecyclerView.setLayoutManager(manager);
+        mRecyclerView.setLoadMoreListener(() -> mPresenter.getTopics(mTopicType, mUsername, mNodeId, false));
+        mRecyclerView.setOnClickReloadListener(() -> {
+            mRecyclerView.setCanloadMore(true);
+            mRecyclerView.showLoadMore();
+            mPresenter.getTopics(mTopicType, mUsername, mNodeId, false);
+        });
+    }
+
+    @Override
+    public void setEmpty(boolean isEmpty) {
+        mRecyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+        mTvNoData.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void onLoadMoreComplete() {
+        mRecyclerView.loadMoreComplete();
+    }
+
+    @Override
+    public void onLoadMoreError() {
+        mRecyclerView.loadMoreError();
+        mRecyclerView.setCanloadMore(false);
+    }
+
+    @Override
+    public void onLoadMoreEnd() {
+        mRecyclerView.loadMoreEnd();
+        mRecyclerView.setCanloadMore(false);
+    }
+
+    @Override
+    public void onFavoriteSuccess() {
+        Snackbar.make(mSwipeRefreshLayout, R.string.favorited, Snackbar.LENGTH_SHORT)
+                .setAction(R.string.view_my_favorite, v -> {
+                    if (DiycodeUtils.checkToken(TopicListActivity.this)) {
+                        ARouter.getInstance().build(TOPIC_LIST)
+                                .withInt(EXTRA_TOPIC_TYPE, TOPIC_FAVORITES)
+                                .withString(EXTRA_TOPIC_USER, DiycodeUtils.getUser(this).getLogin())
+                                .navigation();
+                    }
+                }).show();
+    }
+
+    @Override
+    public void onGetNodes(List<Section> sections) {
+        mSectionListAdapter.addData(sections);
+        mNodeListAdapter.addData(sections.get(0).getNodes());
+    }
+
+    @Override
+    public RxPermissions getRxPermissions() {
+        return mRxPermissions;
+    }
+
+    @Override
+    public void onRefresh() {
+        mPresenter.getTopics(mTopicType, mUsername, mNodeId, true);
+        mRecyclerView.setCanloadMore(true);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (mTopicType == TOPIC_BY_NODE_ID) {
+            getMenuInflater().inflate(R.menu.menu_toolbar_list_activity, menu);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            finish();
+        } else if (id == R.id.action_select_node) {
+            if (mWindow != null) {
+                mWindow.showAsDropDown(mToolbar);
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onDestroy() {
         DefaultAdapter.releaseAllHolder(mRecyclerView);
         super.onDestroy();
         mRxPermissions = null;
+    }
+
+    @Subscriber
+    private void onReplyEvent(ReplyEvent event) {
+        mPresenter.getTopics(mTopicType, mUsername, mNodeId, true);
+        mRecyclerView.setCanloadMore(true);
     }
 }

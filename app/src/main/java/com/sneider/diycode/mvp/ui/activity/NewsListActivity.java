@@ -85,31 +85,6 @@ public class NewsListActivity extends BaseActivity<NewsListPresenter> implements
         mPresenter.getNews(mNodeId, true);
     }
 
-    @Override
-    public void setAdapter(DefaultAdapter adapter) {
-        mRecyclerView.setAdapter(adapter);
-        initRecyclerView();
-    }
-
-    @Override
-    public void setEmpty(boolean isEmpty) {
-        mRecyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
-        mTvNoData.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
-    }
-
-    private void initRecyclerView() {
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-        LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        mRecyclerView.setLayoutManager(manager);
-        mRecyclerView.setLoadMoreListener(() -> mPresenter.getNews(mNodeId, false));
-        mRecyclerView.setOnClickReloadListener(() -> {
-            mRecyclerView.setCanloadMore(true);
-            mRecyclerView.showLoadMore();
-            mPresenter.getNews(mNodeId, false);
-        });
-    }
-
     private void initPopupWindow() {
         View view = View.inflate(this, R.layout.popup_news_nodes, null);
         mFlowLayout = ButterKnife.findById(view, R.id.flow_layout);
@@ -157,28 +132,55 @@ public class NewsListActivity extends BaseActivity<NewsListPresenter> implements
     }
 
     @Override
-    public void onRefresh() {
-        mPresenter.getNews(mNodeId, true);
-        mRecyclerView.setCanloadMore(true);
+    public void showLoading() {
+        Observable.just(1)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(integer -> mSwipeRefreshLayout.setRefreshing(true));
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_toolbar_list_activity, menu);
-        return true;
+    public void hideLoading() {
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            finish();
-        } else if (id == R.id.action_select_node) {
-            if (mWindow != null) {
-                mWindow.showAsDropDown(mToolbar);
-            }
-        }
-        return super.onOptionsItemSelected(item);
+    public void showMessage(String message) {
+        UiUtils.snackbarText(message);
+    }
+
+    @Override
+    public void launchActivity(Intent intent) {
+        UiUtils.startActivity(intent);
+    }
+
+    @Override
+    public void killMyself() {
+        finish();
+    }
+
+    @Override
+    public void setAdapter(DefaultAdapter adapter) {
+        mRecyclerView.setAdapter(adapter);
+        initRecyclerView();
+    }
+
+    private void initRecyclerView() {
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        mRecyclerView.setLayoutManager(manager);
+        mRecyclerView.setLoadMoreListener(() -> mPresenter.getNews(mNodeId, false));
+        mRecyclerView.setOnClickReloadListener(() -> {
+            mRecyclerView.setCanloadMore(true);
+            mRecyclerView.showLoadMore();
+            mPresenter.getNews(mNodeId, false);
+        });
+    }
+
+    @Override
+    public void setEmpty(boolean isEmpty) {
+        mRecyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+        mTvNoData.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -209,30 +211,28 @@ public class NewsListActivity extends BaseActivity<NewsListPresenter> implements
     }
 
     @Override
-    public void showLoading() {
-        Observable.just(1)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(integer -> mSwipeRefreshLayout.setRefreshing(true));
+    public void onRefresh() {
+        mPresenter.getNews(mNodeId, true);
+        mRecyclerView.setCanloadMore(true);
     }
 
     @Override
-    public void hideLoading() {
-        mSwipeRefreshLayout.setRefreshing(false);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_toolbar_list_activity, menu);
+        return true;
     }
 
     @Override
-    public void showMessage(String message) {
-        UiUtils.snackbarText(message);
-    }
-
-    @Override
-    public void launchActivity(Intent intent) {
-        UiUtils.startActivity(intent);
-    }
-
-    @Override
-    public void killMyself() {
-        finish();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            finish();
+        } else if (id == R.id.action_select_node) {
+            if (mWindow != null) {
+                mWindow.showAsDropDown(mToolbar);
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

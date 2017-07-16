@@ -21,6 +21,7 @@ import com.sneider.diycode.utils.DiycodeUtils;
 import com.sneider.diycode.utils.GlideCircleTransform;
 import com.sneider.diycode.utils.html.HtmlUtils;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 import butterknife.BindView;
@@ -86,7 +87,7 @@ public class NotificationListAdapter extends DefaultAdapter<Notification> {
                     && data.getTopic() == null && data.getReply() == null && data.getNode() == null) {
                 mLayout.setVisibility(View.GONE);
                 mTvHint.setVisibility(View.VISIBLE);
-                mTvHint.setText("相关信息已删除");
+                mTvHint.setText(R.string.info_deleted);
             } else {
                 mTvHint.setVisibility(View.GONE);
                 mLayout.setVisibility(View.VISIBLE);
@@ -115,24 +116,28 @@ public class NotificationListAdapter extends DefaultAdapter<Notification> {
                 String content = null;
                 switch (data.getType()) {
                     case "TopicReply":
-                        mTvTitle.setText("在帖子\"" + data.getReply().getTopic_title() + "\"回复了：");
+                        mTvTitle.setText(MessageFormat.format(mAppComponent.application().getString(R.string.reply_at),
+                                data.getReply().getTopic_title()));
                         content = data.getReply().getBody_html();
                         break;
                     case "Mention":
-                        mTvTitle.setText("提及你：");
+                        mTvTitle.setText(R.string.mention_you);
                         content = data.getMention().getBody_html();
                         break;
                     case "Topic":
-                        mTvTitle.setText("创建了帖子：" + data.getTopic().getTitle());
+                        mTvTitle.setText(MessageFormat.format(mAppComponent.application().getString(R.string.create_topic),
+                                data.getTopic().getTitle()));
                         content = data.getTopic().getTitle();
                         break;
                     case "NodeChanged":
-                        mTvTitle.setText("你发布的话题\"" + data.getTopic().getTitle() + "\"由于内容原因");
-                        content = "被管理员移到了\"" + data.getTopic().getNode_name() + "\"节点，请注意查看节点说明。";
+                        mTvTitle.setText(MessageFormat.format(mAppComponent.application().getString(R.string.what_create_topic),
+                                data.getTopic().getTitle()));
+                        content = MessageFormat.format(mAppComponent.application().getString(R.string.what_node_moved),
+                                data.getTopic().getNode_name());
                         break;
                     case "Hacknews":
-                        mTvTitle.setText("你的分享");
-                        content = "暂无内容";
+                        mTvTitle.setText(R.string.your_share);
+                        content = mAppComponent.application().getString(R.string.no_content);
                         break;
                     default:
                         break;

@@ -93,11 +93,8 @@ public class NewsDetailAdapter extends DefaultAdapter {
             mTvTime.setText(MessageFormat.format(itemView.getResources().getString(R.string.publish_time), intervalTime));
             mTvTitle.setText(data.getTitle());
             mTvAddress.setText(HttpUrl.parse(data.getAddress()).host());
-            if (data.getReplies_count() == 0) {
-                mTvReplyCount.setText("暂无回复");
-            } else {
-                mTvReplyCount.setText("共收到" + data.getReplies_count() + "条回复");
-            }
+            mTvReplyCount.setText(data.getReplies_count() == 0 ? mAppComponent.application().getString(R.string.no_reply) :
+                    MessageFormat.format(mAppComponent.application().getString(R.string.what_reply), data.getReplies_count()));
 
             itemView.setOnClickListener(this);
             mIvAvatar.setTag(data.getUser().getLogin());
@@ -180,13 +177,11 @@ public class NewsDetailAdapter extends DefaultAdapter {
                         .transformation(new GlideCircleTransform(mAppComponent.application()))
                         .url(avatarUrl).imageView(mIvAvatar).build());
                 mTvName.setText(data.getUser().getLogin());
-                mTvFloor.setText("#" + position);
+                mTvFloor.setText(MessageFormat.format(mAppComponent.application().getString(R.string.what_floor), position));
                 String intervalTime = DateUtils.getIntervalTime(data.getCreated_at());
                 mTvTime.setText(intervalTime);
                 mBtnEditReply.setVisibility(data.getAbilities().isUpdate() ? View.VISIBLE : View.GONE);
-                if (data.getLikes_count() > 0) {
-                    mTvLikeCount.setText(String.valueOf(data.getLikes_count()));
-                }
+                mTvLikeCount.setText(data.getLikes_count() > 0 ? String.valueOf(data.getLikes_count()) : "");
                 HtmlUtils.parseHtmlAndSetText(itemView.getContext(), data.getBody_html(), mTvContent, mCallback);
 
                 itemView.setOnClickListener(this);

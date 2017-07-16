@@ -24,6 +24,8 @@ import com.sneider.diycode.utils.DiycodeUtils;
 import com.sneider.diycode.widget.loadmore.LoadMoreRecyclerView;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
+import java.text.MessageFormat;
+
 import butterknife.BindView;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -67,24 +69,16 @@ public class UserListActivity extends BaseActivity<UserListPresenter> implements
         User user = DiycodeUtils.getUser(this);
         switch (mUserType) {
             case USER_FOLLOWER:
-                if (user != null && mUsername.equals(user.getLogin())) {
-                    mToolbar.setTitle("我的关注者");
-                } else {
-                    mToolbar.setTitle(mUsername + " 的关注者");
-                }
+                mToolbar.setTitle(user != null && mUsername.equals(user.getLogin()) ? getString(R.string.my_follower) :
+                        MessageFormat.format(getString(R.string.who_follower), mUsername));
                 break;
             case USER_FOLLOWING:
-                if (user != null && mUsername.equals(user.getLogin())) {
-                    mToolbar.setTitle("我正在关注");
-                } else {
-                    mToolbar.setTitle(mUsername + " 正在关注");
-                }
+                mToolbar.setTitle(user != null && mUsername.equals(user.getLogin()) ? getString(R.string.my_following) :
+                        MessageFormat.format(getString(R.string.who_following), mUsername));
                 break;
             case USER_BLOCK:
                 if (user != null && mUsername.equals(user.getLogin())) {
-                    mToolbar.setTitle("我已屏蔽");
-                } else {
-                    mToolbar.setTitle(mUsername + " 已屏蔽");
+                    mToolbar.setTitle(R.string.my_block);
                 }
                 break;
             default:
@@ -95,68 +89,6 @@ public class UserListActivity extends BaseActivity<UserListPresenter> implements
 
         mPresenter.initAdapter(mUserType);
         mPresenter.getUsers(mUserType, mUsername, true);
-    }
-
-    @Override
-    public void setAdapter(DefaultAdapter adapter) {
-        mRecyclerView.setAdapter(adapter);
-        initRecyclerView();
-    }
-
-    @Override
-    public void setEmpty(boolean isEmpty) {
-        mRecyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
-        mTvNoData.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
-    }
-
-    private void initRecyclerView() {
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-        LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        mRecyclerView.setLayoutManager(manager);
-        mRecyclerView.setLoadMoreListener(() -> mPresenter.getUsers(mUserType, mUsername, false));
-        mRecyclerView.setOnClickReloadListener(() -> {
-            mRecyclerView.setCanloadMore(true);
-            mRecyclerView.showLoadMore();
-            mPresenter.getUsers(mUserType, mUsername, false);
-        });
-    }
-
-    @Override
-    public void onRefresh() {
-        mPresenter.getUsers(mUserType, mUsername, true);
-        mRecyclerView.setCanloadMore(true);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onLoadMoreComplete() {
-        mRecyclerView.loadMoreComplete();
-    }
-
-    @Override
-    public void onLoadMoreError() {
-        mRecyclerView.loadMoreError();
-        mRecyclerView.setCanloadMore(false);
-    }
-
-    @Override
-    public void onLoadMoreEnd() {
-        mRecyclerView.loadMoreEnd();
-        mRecyclerView.setCanloadMore(false);
-    }
-
-    @Override
-    public RxPermissions getRxPermissions() {
-        return mRxPermissions;
     }
 
     @Override
@@ -184,6 +116,68 @@ public class UserListActivity extends BaseActivity<UserListPresenter> implements
     @Override
     public void killMyself() {
         finish();
+    }
+
+    @Override
+    public void setAdapter(DefaultAdapter adapter) {
+        mRecyclerView.setAdapter(adapter);
+        initRecyclerView();
+    }
+
+    private void initRecyclerView() {
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        mRecyclerView.setLayoutManager(manager);
+        mRecyclerView.setLoadMoreListener(() -> mPresenter.getUsers(mUserType, mUsername, false));
+        mRecyclerView.setOnClickReloadListener(() -> {
+            mRecyclerView.setCanloadMore(true);
+            mRecyclerView.showLoadMore();
+            mPresenter.getUsers(mUserType, mUsername, false);
+        });
+    }
+
+    @Override
+    public void setEmpty(boolean isEmpty) {
+        mRecyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+        mTvNoData.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void onLoadMoreComplete() {
+        mRecyclerView.loadMoreComplete();
+    }
+
+    @Override
+    public void onLoadMoreError() {
+        mRecyclerView.loadMoreError();
+        mRecyclerView.setCanloadMore(false);
+    }
+
+    @Override
+    public void onLoadMoreEnd() {
+        mRecyclerView.loadMoreEnd();
+        mRecyclerView.setCanloadMore(false);
+    }
+
+    @Override
+    public RxPermissions getRxPermissions() {
+        return mRxPermissions;
+    }
+
+    @Override
+    public void onRefresh() {
+        mPresenter.getUsers(mUserType, mUsername, true);
+        mRecyclerView.setCanloadMore(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

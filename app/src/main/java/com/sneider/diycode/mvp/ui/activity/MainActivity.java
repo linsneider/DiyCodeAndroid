@@ -78,10 +78,10 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     ImageView mIvAvatar;
     TextView mTvUsername;
 
-    private long mExitTime;
-    private User mUser;
     private AppComponent mAppComponent;
+    private User mUser;
     private boolean mHasNotification;
+    private long mExitTime;
 
     @Override
     public void setupActivityComponent(AppComponent appComponent) {
@@ -114,11 +114,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
 
             @Override
             public void onPageSelected(int position) {
-                if (position == 1 || position == 3) {
-                    mFab.setVisibility(View.GONE);
-                } else {
-                    mFab.setVisibility(View.VISIBLE);
-                }
+                mFab.setVisibility(position == 1 ? View.GONE : View.VISIBLE);
             }
 
             @Override
@@ -155,6 +151,8 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                     .transformation(new GlideCircleTransform(mAppComponent.application()))
                     .url(avatarUrl).imageView(mIvAvatar).build());
             mTvUsername.setText(mUser.getLogin());
+
+            mPresenter.getUnreadCount();
         } else {
             Glide.with(mAppComponent.application()).load(R.mipmap.ic_launcher)
                     .transform(new GlideCircleTransform(mAppComponent.application())).into(mIvAvatar);
@@ -162,62 +160,29 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         }
 
         mNavigationView.setNavigationItemSelectedListener(this);
-
-        mPresenter.getUnreadCount();
-    }
-
-    @Subscriber
-    private void onLoginSuccess(LoginEvent event) {
-        mUser = DiycodeUtils.getUser(this);
-        if (mUser != null) {
-            String avatarUrl = mUser.getAvatar_url();
-            if (avatarUrl.contains("diycode"))
-                avatarUrl = avatarUrl.replace("large_avatar", "avatar");
-            mAppComponent.imageLoader().loadImage(mAppComponent.application(), GlideImageConfig.builder()
-                    .transformation(new GlideCircleTransform(mAppComponent.application()))
-                    .url(avatarUrl).imageView(mIvAvatar).build());
-            mTvUsername.setText(mUser.getLogin());
-        }
-        mPresenter.getUnreadCount();
-    }
-
-    @Subscriber
-    private void onLogoutSuccess(LogoutEvent event) {
-        Glide.with(mAppComponent.application()).load(R.mipmap.ic_launcher)
-                .transform(new GlideCircleTransform(mAppComponent.application())).into(mIvAvatar);
-        mTvUsername.setText(R.string.app_name);
-        mHasNotification = false;
-        invalidateOptionsMenu();
-    }
-
-    @OnClick(R.id.fab)
-    void clickFab() {
-        if (DiycodeUtils.checkToken(this)) {
-            switch (mViewPager.getCurrentItem()) {
-                case 0:
-                    ARouter.getInstance().build(TOPIC_ADD).navigation();
-                    break;
-                case 2:
-                    ARouter.getInstance().build(NEWS_ADD).navigation();
-                    break;
-                default:
-                    break;
-            }
-        }
     }
 
     @Override
-    public void onBackPressed() {
-        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            mDrawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            if ((System.currentTimeMillis() - mExitTime) > 2 * 1000) {
-                Toast.makeText(getApplicationContext(), getString(R.string.exit) + getString(R.string.app_name), Toast.LENGTH_SHORT).show();
-                mExitTime = System.currentTimeMillis();
-            } else {
-                super.onBackPressed();
-            }
-        }
+    public void showLoading() {
+    }
+
+    @Override
+    public void hideLoading() {
+    }
+
+    @Override
+    public void showMessage(String message) {
+        UiUtils.snackbarText(message);
+    }
+
+    @Override
+    public void launchActivity(Intent intent) {
+        UiUtils.startActivity(intent);
+    }
+
+    @Override
+    public void killMyself() {
+        finish();
     }
 
     @Override
@@ -228,7 +193,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         }
         MenuItem searchItem = menu.findItem(R.id.action_search);
         mSearchView = (SearchView) searchItem.getActionView();
-        mSearchView.setQueryHint("搜索本站内容");
+        mSearchView.setQueryHint(getString(R.string.search_content));
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -295,26 +260,59 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     }
 
     @Override
-    public void showLoading() {
+    public void onBackPressed() {
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            if ((System.currentTimeMillis() - mExitTime) > 2 * 1000) {
+                Toast.makeText(getApplicationContext(), getString(R.string.exit) + getString(R.string.app_name), Toast.LENGTH_SHORT).show();
+                mExitTime = System.currentTimeMillis();
+            } else {
+                super.onBackPressed();
+            }
+        }
     }
 
-    @Override
-    public void hideLoading() {
+    @OnClick(R.id.fab)
+    void clickFab() {
+        if (DiycodeUtils.checkToken(this)) {
+            switch (mViewPager.getCurrentItem()) {
+                case 0:
+                    ARouter.getInstance().build(TOPIC_ADD).navigation();
+                    break;
+                case 2:
+                    ARouter.getInstance().build(NEWS_ADD).navigation();
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
-    @Override
-    public void showMessage(String message) {
-        UiUtils.snackbarText(message);
+    @Subscriber
+    private void onLoginSuccess(LoginEvent event) {
+        mUser = DiycodeUtils.getUser(this);
+        if (mUser != null) {
+            String avatarUrl = mUser.getAvatar_url();
+            if (avatarUrl.contains("diycode"))
+                avatarUrl = avatarUrl.replace("large_avatar", "avatar");
+            mAppComponent.imageLoader().loadImage(mAppComponent.application(), GlideImageConfig.builder()
+                    .transformation(new GlideCircleTransform(mAppComponent.application()))
+                    .url(avatarUrl).imageView(mIvAvatar).build());
+            mTvUsername.setText(mUser.getLogin());
+        }
+
+        mPresenter.getUnreadCount();
     }
 
-    @Override
-    public void launchActivity(Intent intent) {
-        UiUtils.startActivity(intent);
-    }
+    @Subscriber
+    private void onLogoutSuccess(LogoutEvent event) {
+        Glide.with(mAppComponent.application()).load(R.mipmap.ic_launcher)
+                .transform(new GlideCircleTransform(mAppComponent.application())).into(mIvAvatar);
+        mTvUsername.setText(R.string.app_name);
 
-    @Override
-    public void killMyself() {
-        finish();
+        mHasNotification = false;
+        invalidateOptionsMenu();
     }
 
     @Subscriber

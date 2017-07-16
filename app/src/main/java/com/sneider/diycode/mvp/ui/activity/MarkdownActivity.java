@@ -30,7 +30,6 @@ public class MarkdownActivity extends BaseActivity {
 
     @Override
     public void setupActivityComponent(AppComponent appComponent) {
-
     }
 
     @Override

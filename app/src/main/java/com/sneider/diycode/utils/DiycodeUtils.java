@@ -73,7 +73,7 @@ public class DiycodeUtils {
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, title);
         shareIntent.putExtra(Intent.EXTRA_TEXT, content);
         shareIntent.setType("text/plain");
-        context.startActivity(Intent.createChooser(shareIntent, "分享到..."));
+        context.startActivity(Intent.createChooser(shareIntent, context.getString(R.string.share_to)));
     }
 
     public static void shareImage(Context context, String url) {
@@ -81,7 +81,7 @@ public class DiycodeUtils {
         shareIntent.setAction(Intent.ACTION_SEND);
         shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(url));
         shareIntent.setType("image/*");
-        context.startActivity(Intent.createChooser(shareIntent, "分享到..."));
+        context.startActivity(Intent.createChooser(shareIntent, context.getString(R.string.share_to)));
     }
 
     public static void openBrowser(Context context, String url) {
@@ -95,7 +95,7 @@ public class DiycodeUtils {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
-        activity.startActivityForResult(Intent.createChooser(intent, "选择图片"), requestCode);
+        activity.startActivityForResult(Intent.createChooser(intent, activity.getString(R.string.select_photo)), requestCode);
     }
 
     public static List<Section> processNode(List<Node> data) {

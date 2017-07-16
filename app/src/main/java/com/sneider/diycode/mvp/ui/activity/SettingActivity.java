@@ -88,6 +88,44 @@ public class SettingActivity extends BaseActivity<SettingPresenter> implements S
 
     }
 
+    @Override
+    public void showLoading() {
+    }
+
+    @Override
+    public void hideLoading() {
+    }
+
+    @Override
+    public void showMessage(String message) {
+        UiUtils.snackbarText(message);
+    }
+
+    @Override
+    public void launchActivity(Intent intent) {
+        UiUtils.startActivity(intent);
+    }
+
+    @Override
+    public void killMyself() {
+        finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        PgyUpdateManager.unregister();
+        super.onDestroy();
+    }
+
     @OnClick(R.id.btn_clear_cache)
     void clearCache() {
         CacheDataUtils.clearAllCache(this);
@@ -99,14 +137,14 @@ public class SettingActivity extends BaseActivity<SettingPresenter> implements S
         PgyUpdateManager.register(this, "com.sneider.diycode.fileprovider", new UpdateManagerListener() {
             @Override
             public void onNoUpdateAvailable() {
-                ToastUtils.showShort("您的应用为最新版本");
+                ToastUtils.showShort(R.string.app_is_latest);
             }
 
             @Override
             public void onUpdateAvailable(String result) {
                 AppBean appBean = getAppBeanFromString(result);
                 new MaterialDialog.Builder(SettingActivity.this)
-                        .title("发现新版本")
+                        .title(R.string.find_new_version)
                         .content(appBean.getReleaseNote())
                         .contentColor(color_4d4d4d)
                         .positiveText(R.string.update)
@@ -133,14 +171,14 @@ public class SettingActivity extends BaseActivity<SettingPresenter> implements S
         if (AppUtils.isInstallApp("com.tencent.mobileqq")) {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("mqqwpa://im/chat?chat_type=wpa&uin=827173000")));
         } else {
-            ToastUtils.showShort("请安装手机QQ或联系QQ:827173000");
+            ToastUtils.showShort(R.string.contact_hint);
         }
     }
 
     @OnClick(R.id.btn_logout)
     void clickLogout() {
         new MaterialDialog.Builder(this)
-                .content("确定要退出登录吗？")
+                .content(R.string.confirm_logout)
                 .contentColor(color_4d4d4d)
                 .positiveText(R.string.confirm)
                 .onPositive((dialog, which) -> {
@@ -154,37 +192,5 @@ public class SettingActivity extends BaseActivity<SettingPresenter> implements S
                 .negativeText(R.string.cancel)
                 .negativeColor(color_999999)
                 .show();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void showLoading() {
-    }
-
-    @Override
-    public void hideLoading() {
-    }
-
-    @Override
-    public void showMessage(String message) {
-        UiUtils.snackbarText(message);
-    }
-
-    @Override
-    public void launchActivity(Intent intent) {
-        UiUtils.startActivity(intent);
-    }
-
-    @Override
-    public void killMyself() {
-        finish();
     }
 }

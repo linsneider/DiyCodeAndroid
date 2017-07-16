@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="delete">
+        <item>删除</item>
+    </string-array>
+
+    <string-array name="favorite">
+        <item>收藏</item>
+    </string-array>
+
+    <string-array name="unfollow">
+        <item>取消关注</item>
+    </string-array>
+
+    <string-array name="unblock">
+        <item>取消屏蔽</item>
+    </string-array>
+
+    <string-array name="unfavorite">
+        <item>取消收藏</item>
+    </string-array>
+</resources>

@@ -31,6 +31,8 @@ import com.sneider.diycode.mvp.presenter.UserDetailPresenter;
 import com.sneider.diycode.utils.DiycodeUtils;
 import com.sneider.diycode.utils.GlideCircleTransform;
 
+import java.text.MessageFormat;
+
 import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -158,6 +160,75 @@ public class UserDetailActivity extends BaseActivity<UserDetailPresenter> implem
         finish();
     }
 
+    @Override
+    public void onGetUserInfo(User user) {
+        mAvatarUrl = user.getAvatar_url();
+        if (mAvatarUrl.contains("diycode"))
+            mAvatarUrl = mAvatarUrl.replace("large_avatar", "avatar");
+        mAppComponent.imageLoader().loadImage(mAppComponent.application(), GlideImageConfig.builder()
+                .transformation(new GlideCircleTransform(mAppComponent.application()))
+//                .errorPic(R.mipmap.ic_launcher)
+//                .placeholder(R.mipmap.ic_launcher)
+                .url(mAvatarUrl).imageView(mIvAvatar).build());
+        mTvUsername.setText(user.getLogin() + "(" + user.getName() + ")");
+        mTvNumber.setText(MessageFormat.format(getString(R.string.what_number_level), user.getId(), user.getLevel_name()));
+        String timeAndLocation = user.getCreated_at().substring(0, 10);
+        if (!TextUtils.isEmpty(user.getLocation())) {
+            timeAndLocation += (" • " + user.getLocation());
+        }
+        mTvTimeLocation.setText(timeAndLocation);
+        mTvTopicCount.setText(String.valueOf(user.getTopics_count()));
+        mTvFavoriteCount.setText(String.valueOf(user.getFavorites_count()));
+        mTvReplyCount.setText(String.valueOf(user.getReplies_count()));
+        mTvFollowerCount.setText(String.valueOf(user.getFollowers_count()));
+        mTvFollowingCount.setText(String.valueOf(user.getFollowing_count()));
+    }
+
+    @Override
+    public void onFollowUser() {
+        Snackbar.make(mCoordinatorLayout, R.string.followed, Snackbar.LENGTH_SHORT)
+                .setAction(R.string.view_my_follow, v -> {
+                    if (DiycodeUtils.checkToken(this)) {
+                        ARouter.getInstance().build(USER_LIST)
+                                .withInt(EXTRA_USER_TYPE, USER_FOLLOWING)
+                                .withString(EXTRA_USERNAME, mUserMe.getLogin())
+                                .navigation();
+                    }
+                }).show();
+    }
+
+    @Override
+    public void onBlockUser() {
+        Snackbar.make(mCoordinatorLayout, R.string.blocked, Snackbar.LENGTH_SHORT)
+                .setAction(R.string.view_my_block, v -> {
+                    if (DiycodeUtils.checkToken(this)) {
+                        ARouter.getInstance().build(USER_LIST)
+                                .withInt(EXTRA_USER_TYPE, USER_BLOCK)
+                                .withString(EXTRA_USERNAME, mUserMe.getLogin())
+                                .navigation();
+                    }
+                }).show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_toolbar_detail_activity, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            finish();
+        } else if (id == R.id.action_share) {
+            DiycodeUtils.shareText(this, mUsername, "https://www.diycode.cc/" + mUsername);
+        } else if (id == R.id.action_open_web) {
+            DiycodeUtils.openWebActivity("https://www.diycode.cc/" + mUsername);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     @OnClick(R.id.iv_avatar)
     void clickAvatar() {
         if (!TextUtils.isEmpty(mAvatarUrl)) {
@@ -231,74 +302,5 @@ public class UserDetailActivity extends BaseActivity<UserDetailPresenter> implem
                 .withInt(EXTRA_USER_TYPE, USER_BLOCK)
                 .withString(EXTRA_USERNAME, mUsername)
                 .navigation();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_toolbar_detail_activity, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            finish();
-        } else if (id == R.id.action_share) {
-            DiycodeUtils.shareText(this, mUsername, "https://www.diycode.cc/" + mUsername);
-        } else if (id == R.id.action_open_web) {
-            DiycodeUtils.openWebActivity("https://www.diycode.cc/" + mUsername);
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onGetUserInfo(User user) {
-        mAvatarUrl = user.getAvatar_url();
-        if (mAvatarUrl.contains("diycode"))
-            mAvatarUrl = mAvatarUrl.replace("large_avatar", "avatar");
-        mAppComponent.imageLoader().loadImage(mAppComponent.application(), GlideImageConfig.builder()
-                .transformation(new GlideCircleTransform(mAppComponent.application()))
-//                .errorPic(R.mipmap.ic_launcher)
-//                .placeholder(R.mipmap.ic_launcher)
-                .url(mAvatarUrl).imageView(mIvAvatar).build());
-        mTvUsername.setText(user.getLogin() + "(" + user.getName() + ")");
-        mTvNumber.setText("第" + user.getId() + "位会员 • " + user.getLevel_name());
-        String timeAndLocation = user.getCreated_at().substring(0, 10);
-        if (!TextUtils.isEmpty(user.getLocation())) {
-            timeAndLocation += (" • " + user.getLocation());
-        }
-        mTvTimeLocation.setText(timeAndLocation);
-        mTvTopicCount.setText(String.valueOf(user.getTopics_count()));
-        mTvFavoriteCount.setText(String.valueOf(user.getFavorites_count()));
-        mTvReplyCount.setText(String.valueOf(user.getReplies_count()));
-        mTvFollowerCount.setText(String.valueOf(user.getFollowers_count()));
-        mTvFollowingCount.setText(String.valueOf(user.getFollowing_count()));
-    }
-
-    @Override
-    public void onFollowUser() {
-        Snackbar.make(mCoordinatorLayout, "已关注", Snackbar.LENGTH_SHORT)
-                .setAction("查看我正在关注", v -> {
-                    if (DiycodeUtils.checkToken(this)) {
-                        ARouter.getInstance().build(USER_LIST)
-                                .withInt(EXTRA_USER_TYPE, USER_FOLLOWING)
-                                .withString(EXTRA_USERNAME, mUserMe.getLogin())
-                                .navigation();
-                    }
-                }).show();
-    }
-
-    @Override
-    public void onBlockUser() {
-        Snackbar.make(mCoordinatorLayout, "已屏蔽", Snackbar.LENGTH_SHORT)
-                .setAction("查看我已屏蔽", v -> {
-                    if (DiycodeUtils.checkToken(this)) {
-                        ARouter.getInstance().build(USER_LIST)
-                                .withInt(EXTRA_USER_TYPE, USER_BLOCK)
-                                .withString(EXTRA_USERNAME, mUserMe.getLogin())
-                                .navigation();
-                    }
-                }).show();
     }
 }

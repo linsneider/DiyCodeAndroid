@@ -10,6 +10,7 @@ import com.jess.arms.di.scope.FragmentScope;
 import com.jess.arms.integration.AppManager;
 import com.jess.arms.mvp.BasePresenter;
 import com.jess.arms.utils.PermissionUtil;
+import com.sneider.diycode.R;
 import com.sneider.diycode.mvp.contract.TopicFragmentContract;
 import com.sneider.diycode.mvp.model.bean.Ok;
 import com.sneider.diycode.mvp.model.bean.Topic;
@@ -88,7 +89,7 @@ public class TopicFragmentPresenter extends BasePresenter<TopicFragmentContract.
                 }
             });
             mAdapter.setOnItemLongClickListener((view, topic) ->
-                    new MaterialDialog.Builder(mAppManager.getCurrentActivity()).items("收藏")
+                    new MaterialDialog.Builder(mAppManager.getCurrentActivity()).items(R.array.favorite)
                             .itemsCallback((dialog, itemView, position, text) -> {
                                 if (DiycodeUtils.checkToken(mApplication)) {
                                     favoriteTopic(topic.getId());
@@ -153,7 +154,7 @@ public class TopicFragmentPresenter extends BasePresenter<TopicFragmentContract.
                     @Override
                     public void onError(@NonNull Throwable e) {
                         super.onError(e);
-                        ToastUtils.showShort("收藏失败");
+                        ToastUtils.showShort(R.string.favorite_failed);
                     }
 
                     @Override

@@ -91,7 +91,7 @@ public class KeyStoreHelper {
                 SecurityConstants.KEYSTORE_PROVIDER_ANDROID_KEYSTORE);
         kpGenerator.initialize(spec);
         KeyPair keyPair = kpGenerator.generateKeyPair();
-        Log.d(TAG, "Public Key is: " + keyPair.getPublic().toString());
+        Log.e(TAG, "Public Key is: " + keyPair.getPublic().toString());
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -109,7 +109,7 @@ public class KeyStoreHelper {
                 .setUserAuthenticationRequired(requireAuth)
                 .build());
         KeyPair keyPair = keyPairGenerator.generateKeyPair();
-        Log.d(TAG, "Public Key is: " + keyPair.getPublic().toString());
+        Log.e(TAG, "Public Key is: " + keyPair.getPublic().toString());
     }
 
     /**
@@ -160,11 +160,11 @@ public class KeyStoreHelper {
         ks.load(null);
         KeyStore.Entry entry = ks.getEntry(alias, null);
         if (entry == null) {
-            Log.w(TAG, "No key found under alias: " + alias);
+            Log.e(TAG, "No key found under alias: " + alias);
             return null;
         }
         if (!(entry instanceof KeyStore.PrivateKeyEntry)) {
-            Log.w(TAG, "Not an instance of a PrivateKeyEntry");
+            Log.e(TAG, "Not an instance of a PrivateKeyEntry");
             return null;
         }
         return (KeyStore.PrivateKeyEntry) entry;

@@ -9,7 +9,6 @@ import io.reactivex.Observable;
 public interface MainContract {
 
     interface View extends IView {
-
     }
 
     interface Model extends IModel {

@@ -122,11 +122,8 @@ public class ProjectDetailAdapter extends DefaultAdapter {
                 }
             });
             mWebView.loadUrl("file:///android_asset/markdown.html");
-            if (mInfos.size() == 1) {
-                mTvReplyCount.setText("暂无回复");
-            } else {
-                mTvReplyCount.setText("共收到" + (mInfos.size() - 1) + "条回复");
-            }
+            mTvReplyCount.setText(mInfos.size() == 1 ? mAppComponent.application().getString(R.string.no_reply) :
+                    MessageFormat.format(mAppComponent.application().getString(R.string.what_reply), mInfos.size() - 1));
 
             itemView.setOnClickListener(this);
             mTvProjectName.setTag(data.getGithub());
@@ -213,13 +210,11 @@ public class ProjectDetailAdapter extends DefaultAdapter {
                         .transformation(new GlideCircleTransform(mAppComponent.application()))
                         .url(avatarUrl).imageView(mIvAvatar).build());
                 mTvName.setText(data.getUser().getLogin());
-                mTvFloor.setText("#" + position);
+                mTvFloor.setText(MessageFormat.format(mAppComponent.application().getString(R.string.what_floor), position));
                 String intervalTime = DateUtils.getIntervalTime(data.getCreated_at());
                 mTvTime.setText(intervalTime);
                 mBtnEditReply.setVisibility(data.getAbilities().isUpdate() ? View.VISIBLE : View.GONE);
-                if (data.getLikes_count() > 0) {
-                    mTvLikeCount.setText(String.valueOf(data.getLikes_count()));
-                }
+                mTvLikeCount.setText(data.getLikes_count() > 0 ? String.valueOf(data.getLikes_count()) : "");
                 HtmlUtils.parseHtmlAndSetText(itemView.getContext(), data.getBody_html(), mTvContent, mCallback);
 
                 itemView.setOnClickListener(this);

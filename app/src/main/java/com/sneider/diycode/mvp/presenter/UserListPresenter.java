@@ -9,6 +9,7 @@ import com.jess.arms.di.scope.ActivityScope;
 import com.jess.arms.integration.AppManager;
 import com.jess.arms.mvp.BasePresenter;
 import com.jess.arms.utils.PermissionUtil;
+import com.sneider.diycode.R;
 import com.sneider.diycode.mvp.contract.UserListContract;
 import com.sneider.diycode.mvp.model.bean.Ok;
 import com.sneider.diycode.mvp.model.bean.User;
@@ -64,11 +65,11 @@ public class UserListPresenter extends BasePresenter<UserListContract.Model, Use
             mAdapter.setOnItemLongClickListener((view, user) -> {
                 switch (userType) {
                     case USER_FOLLOWING:
-                        new MaterialDialog.Builder(mAppManager.getCurrentActivity()).items("取消关注")
+                        new MaterialDialog.Builder(mAppManager.getCurrentActivity()).items(R.array.unfollow)
                                 .itemsCallback((dialog, itemView, position, text) -> unfollowUser(user)).show();
                         break;
                     case USER_BLOCK:
-                        new MaterialDialog.Builder(mAppManager.getCurrentActivity()).items("取消屏蔽")
+                        new MaterialDialog.Builder(mAppManager.getCurrentActivity()).items(R.array.unblock)
                                 .itemsCallback((dialog, itemView, position, text) -> unblockUser(user)).show();
                         break;
                     default:
@@ -148,7 +149,7 @@ public class UserListPresenter extends BasePresenter<UserListContract.Model, Use
                     @Override
                     public void onError(@NonNull Throwable e) {
                         super.onError(e);
-                        ToastUtils.showShort("取消关注失败");
+                        ToastUtils.showShort(R.string.unfollow_failed);
                     }
 
                     @Override
@@ -170,7 +171,7 @@ public class UserListPresenter extends BasePresenter<UserListContract.Model, Use
                     @Override
                     public void onError(@NonNull Throwable e) {
                         super.onError(e);
-                        ToastUtils.showShort("取消屏蔽失败");
+                        ToastUtils.showShort(R.string.unblock_failed);
                     }
 
                     @Override

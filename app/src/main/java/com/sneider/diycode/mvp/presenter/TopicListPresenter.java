@@ -12,6 +12,7 @@ import com.jess.arms.di.scope.ActivityScope;
 import com.jess.arms.integration.AppManager;
 import com.jess.arms.mvp.BasePresenter;
 import com.jess.arms.utils.PermissionUtil;
+import com.sneider.diycode.R;
 import com.sneider.diycode.app.ARouterPaths;
 import com.sneider.diycode.mvp.contract.TopicListContract;
 import com.sneider.diycode.mvp.model.bean.Node;
@@ -102,7 +103,7 @@ public class TopicListPresenter extends BasePresenter<TopicListContract.Model, T
                 switch (topicType) {
                     case TOPIC_CREATE:
                     case TOPIC_BY_NODE_ID:
-                        new MaterialDialog.Builder(mAppManager.getCurrentActivity()).items("收藏")
+                        new MaterialDialog.Builder(mAppManager.getCurrentActivity()).items(R.array.favorite)
                                 .itemsCallback((dialog, itemView, position, text) -> {
                                     if (DiycodeUtils.checkToken(mApplication)) {
                                         favoriteTopic(topic.getId());
@@ -112,7 +113,7 @@ public class TopicListPresenter extends BasePresenter<TopicListContract.Model, T
                     case TOPIC_FAVORITES:
                         User user = DiycodeUtils.getUser(mApplication);
                         if (user != null && username.equals(user.getLogin())) {
-                            new MaterialDialog.Builder(mAppManager.getCurrentActivity()).items("取消收藏")
+                            new MaterialDialog.Builder(mAppManager.getCurrentActivity()).items(R.array.unfavorite)
                                     .itemsCallback((dialog, itemView, position, text) -> {
                                         if (DiycodeUtils.checkToken(mApplication)) {
                                             unfavoriteTopic(topic);
@@ -195,7 +196,7 @@ public class TopicListPresenter extends BasePresenter<TopicListContract.Model, T
                     @Override
                     public void onError(@NonNull Throwable e) {
                         super.onError(e);
-                        ToastUtils.showShort("收藏失败");
+                        ToastUtils.showShort(R.string.favorite_failed);
                     }
 
                     @Override
@@ -215,7 +216,7 @@ public class TopicListPresenter extends BasePresenter<TopicListContract.Model, T
                     @Override
                     public void onError(@NonNull Throwable e) {
                         super.onError(e);
-                        ToastUtils.showShort("取消收藏失败");
+                        ToastUtils.showShort(R.string.unfavorite_failed);
                     }
 
                     @Override

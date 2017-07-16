@@ -87,7 +87,7 @@ public class AddReplyPresenter extends BasePresenter<AddReplyContract.Model, Add
                     @Override
                     public void onError(@NonNull Throwable e) {
                         super.onError(e);
-                        ToastUtils.showShort("获取评论内容失败");
+                        ToastUtils.showShort(R.string.get_reply_failed);
                     }
 
                     @Override
@@ -160,7 +160,7 @@ public class AddReplyPresenter extends BasePresenter<AddReplyContract.Model, Add
                     @Override
                     public void onError(@NonNull Throwable e) {
                         super.onError(e);
-                        ToastUtils.showShort("获取评论内容失败");
+                        ToastUtils.showShort(R.string.get_reply_failed);
                     }
 
                     @Override
@@ -241,12 +241,12 @@ public class AddReplyPresenter extends BasePresenter<AddReplyContract.Model, Add
                     @Override
                     public void onError(@NonNull Throwable e) {
                         super.onError(e);
-                        ToastUtils.showShort("图片上传失败");
+                        ToastUtils.showShort(R.string.upload_failed);
                     }
 
                     @Override
                     public void onNext(@NonNull ImageResult url) {
-                        ToastUtils.showShort("图片上传成功");
+                        ToastUtils.showShort(R.string.upload_success);
                         if (mRootView != null) mRootView.onUploadPhoto(url.getImage_url());
                     }
                 });

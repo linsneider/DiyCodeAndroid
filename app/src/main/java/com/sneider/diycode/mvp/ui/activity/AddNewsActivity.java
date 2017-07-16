@@ -51,9 +51,9 @@ public class AddNewsActivity extends BaseActivity<AddNewsPresenter> implements A
     @BindColor(R.color.color_4d4d4d) int color_4d4d4d;
     @BindColor(R.color.color_999999) int color_999999;
 
-    private MaterialDialog mDialog;
     private AppComponent mAppComponent;
     private RxPermissions mRxPermissions;
+    private MaterialDialog mDialog;
     private int mNodeId;
 
     @Override
@@ -72,7 +72,7 @@ public class AddNewsActivity extends BaseActivity<AddNewsPresenter> implements A
     @Override
     public void initData(Bundle savedInstanceState) {
         mToolbar.setNavigationIcon(R.drawable.ic_back);
-        mToolbar.setTitle("创建新分享");
+        mToolbar.setTitle(R.string.add_news);
         setSupportActionBar(mToolbar);
         mDialog = new MaterialDialog.Builder(this).content(R.string.please_wait).progress(true, 0).build();
 
@@ -98,45 +98,6 @@ public class AddNewsActivity extends BaseActivity<AddNewsPresenter> implements A
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_toolbar_add_activity, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            onBackPressed();
-        } else if (id == R.id.action_send) {
-            String title = mEtTitle.getText().toString().trim();
-            String link = mEtLink.getText().toString().trim();
-            if (TextUtils.isEmpty(title)) {
-                mTitle.setError("请输入标题");
-            } else if (TextUtils.isEmpty(link)) {
-                mTitle.setErrorEnabled(false);
-                mLink.setError("请输入链接");
-            } else if (!URLUtil.isNetworkUrl(link)) {
-                mLink.setError("链接格式不正确");
-            } else if (mNodeId == 0) {
-                mTitle.setErrorEnabled(false);
-                mLink.setErrorEnabled(false);
-                ToastUtils.showShort("请选择分类");
-            } else {
-                mTitle.setErrorEnabled(false);
-                mLink.setErrorEnabled(false);
-                mPresenter.createNews(title, link, mNodeId);
-            }
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onGetNodes(List<NewsNode> nodes) {
-        initTagLayout(nodes);
-    }
-
     private void initTagLayout(List<NewsNode> nodes) {
         TagAdapter adapter = new TagAdapter<NewsNode>(nodes) {
             @Override
@@ -153,11 +114,6 @@ public class AddNewsActivity extends BaseActivity<AddNewsPresenter> implements A
         mFlowLayout.setAdapter(adapter);
         adapter.setSelectedList(0);
         mNodeId = nodes.get(0).getId();
-    }
-
-    @Override
-    public RxPermissions getRxPermissions() {
-        return mRxPermissions;
     }
 
     @Override
@@ -186,9 +142,53 @@ public class AddNewsActivity extends BaseActivity<AddNewsPresenter> implements A
     }
 
     @Override
+    public void onGetNodes(List<NewsNode> nodes) {
+        initTagLayout(nodes);
+    }
+
+    @Override
+    public RxPermissions getRxPermissions() {
+        return mRxPermissions;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_toolbar_add_activity, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            onBackPressed();
+        } else if (id == R.id.action_send) {
+            String title = mEtTitle.getText().toString().trim();
+            String link = mEtLink.getText().toString().trim();
+            if (TextUtils.isEmpty(title)) {
+                mTitle.setError(getString(R.string.please_input_title));
+            } else if (TextUtils.isEmpty(link)) {
+                mTitle.setErrorEnabled(false);
+                mLink.setError(getString(R.string.please_input_link));
+            } else if (!URLUtil.isNetworkUrl(link)) {
+                mLink.setError(getString(R.string.link_is_error));
+            } else if (mNodeId == 0) {
+                mTitle.setErrorEnabled(false);
+                mLink.setErrorEnabled(false);
+                ToastUtils.showShort(R.string.please_choose_category);
+            } else {
+                mTitle.setErrorEnabled(false);
+                mLink.setErrorEnabled(false);
+                mPresenter.createNews(title, link, mNodeId);
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onBackPressed() {
         new MaterialDialog.Builder(this)
-                .content("退出此次编辑？")
+                .content(R.string.quit_edit)
                 .contentColor(color_4d4d4d)
                 .positiveText(R.string.confirm)
                 .onPositive((dialog, which) -> super.onBackPressed())

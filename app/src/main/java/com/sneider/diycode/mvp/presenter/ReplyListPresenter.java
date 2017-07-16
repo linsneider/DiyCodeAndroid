@@ -10,8 +10,8 @@ import com.jess.arms.utils.PermissionUtil;
 import com.sneider.diycode.mvp.contract.ReplyListContract;
 import com.sneider.diycode.mvp.model.bean.Reply;
 import com.sneider.diycode.mvp.ui.adapter.ReplyListAdapter;
-import com.sneider.diycode.utils.DiycodeUtils;
 import com.sneider.diycode.utils.Constant;
+import com.sneider.diycode.utils.DiycodeUtils;
 import com.sneider.diycode.utils.RxUtils;
 import com.sneider.diycode.utils.html.HtmlUtils;
 

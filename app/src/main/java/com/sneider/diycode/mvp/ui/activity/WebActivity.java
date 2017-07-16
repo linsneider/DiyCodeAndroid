@@ -56,7 +56,6 @@ public class WebActivity extends BaseActivity {
 
     @Override
     public void setupActivityComponent(AppComponent appComponent) {
-
     }
 
     @Override
@@ -135,11 +134,75 @@ public class WebActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_toolbar_web_activity, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            finish();
+        } else if (id == R.id.action_share) {
+            DiycodeUtils.shareText(this, mWebView.getTitle(), mWebView.getUrl());
+        } else if (id == R.id.action_refresh) {
+            mWebView.reload();
+        } else if (id == R.id.action_open_browser) {
+            DiycodeUtils.openBrowser(this, mUrl);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mWebView.canGoBack()) {
+            mWebView.goBack();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        clearWebViewResource();
+        super.onDestroy();
+    }
+
+    private void clearWebViewResource() {
+        if (mWebView != null) {
+            mWebView.removeAllViews();
+            // in android 5.1(sdk:21) we should invoke this to avoid memory leak
+            // see (https://coolpers.github.io/webview/memory/leak/2015/07/16/android-5.1-webview-memory-leak.html)
+            ((ViewGroup) mWebView.getParent()).removeView(mWebView);
+            mWebView.setTag(null);
+            mWebView.clearHistory();
+            mWebView.destroy();
+            mWebView = null;
+        }
+    }
+
     @OnClick(R.id.tv_hint)
     void clickHint() {
         mTvHint.setVisibility(View.INVISIBLE);
         mWebView.setVisibility(View.VISIBLE);
         mWebView.reload();
+    }
+
+    private boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getActiveNetworkInfo();
+            if (info != null && info.isConnected()) {
+                // 当前网络是连接的
+                if (info.getState() == NetworkInfo.State.CONNECTED) {
+                    // 当前所连接的网络可用
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void loadingOperation(int newProgress) {
@@ -208,69 +271,5 @@ public class WebActivity extends BaseActivity {
             }
         });
         progressBar.startAnimation(animation);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_toolbar_web_activity, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            finish();
-        } else if (id == R.id.action_share) {
-            DiycodeUtils.shareText(this, mWebView.getTitle(), mWebView.getUrl());
-        } else if (id == R.id.action_refresh) {
-            mWebView.reload();
-        } else if (id == R.id.action_open_browser) {
-            DiycodeUtils.openBrowser(this, mUrl);
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (mWebView.canGoBack()) {
-            mWebView.goBack();
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        clearWebViewResource();
-        super.onDestroy();
-    }
-
-    private void clearWebViewResource() {
-        if (mWebView != null) {
-            mWebView.removeAllViews();
-            // in android 5.1(sdk:21) we should invoke this to avoid memory leak
-            // see (https://coolpers.github.io/webview/memory/leak/2015/07/16/android-5.1-webview-memory-leak.html)
-            ((ViewGroup) mWebView.getParent()).removeView(mWebView);
-            mWebView.setTag(null);
-            mWebView.clearHistory();
-            mWebView.destroy();
-            mWebView = null;
-        }
-    }
-
-    private boolean isNetworkAvailable(Context context) {
-        ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivity != null) {
-            NetworkInfo info = connectivity.getActiveNetworkInfo();
-            if (info != null && info.isConnected()) {
-                // 当前网络是连接的
-                if (info.getState() == NetworkInfo.State.CONNECTED) {
-                    // 当前所连接的网络可用
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 }

@@ -21,6 +21,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.bumptech.glide.Glide;
 import com.jess.arms.base.AdapterViewPager;
@@ -28,6 +30,9 @@ import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.UiUtils;
 import com.jess.arms.widget.imageloader.glide.GlideImageConfig;
+import com.pgyersdk.javabean.AppBean;
+import com.pgyersdk.update.PgyUpdateManager;
+import com.pgyersdk.update.UpdateManagerListener;
 import com.sneider.diycode.R;
 import com.sneider.diycode.di.component.DaggerMainComponent;
 import com.sneider.diycode.di.module.MainModule;
@@ -47,6 +52,7 @@ import org.simple.eventbus.Subscriber;
 
 import java.util.ArrayList;
 
+import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -74,6 +80,9 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     @BindView(R.id.view_pager) ViewPager mViewPager;
     @BindView(R.id.fab) FloatingActionButton mFab;
     @BindView(R.id.nav_view) NavigationView mNavigationView;
+
+    @BindColor(R.color.color_4d4d4d) int color_4d4d4d;
+    @BindColor(R.color.color_999999) int color_999999;
 
     SearchView mSearchView;
     ImageView mIvAvatar;
@@ -164,6 +173,31 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         }
 
         mNavigationView.setNavigationItemSelectedListener(this);
+
+        PgyUpdateManager.register(this, "com.sneider.diycode.fileprovider", new UpdateManagerListener() {
+            @Override
+            public void onNoUpdateAvailable() {
+            }
+
+            @Override
+            public void onUpdateAvailable(String result) {
+                AppBean appBean = getAppBeanFromString(result);
+                new MaterialDialog.Builder(MainActivity.this)
+                        .title(R.string.find_new_version)
+                        .content(appBean.getReleaseNote())
+                        .contentColor(color_4d4d4d)
+                        .positiveText(R.string.update)
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                startDownloadTask(MainActivity.this, appBean.getDownloadURL());
+                            }
+                        })
+                        .negativeText(R.string.cancel)
+                        .negativeColor(color_999999)
+                        .show();
+            }
+        });
     }
 
     @Override
@@ -275,6 +309,12 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                 super.onBackPressed();
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        PgyUpdateManager.unregister();
+        super.onDestroy();
     }
 
     @OnClick(R.id.fab)

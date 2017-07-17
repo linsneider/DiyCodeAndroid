@@ -165,7 +165,7 @@ public class TopicListPresenter extends BasePresenter<TopicListContract.Model, T
                 .doAfterTerminate(() -> {
                     if (isRefresh) mRootView.hideLoading();
                 })
-                .compose(RxUtils.bindToLifecycle(mRootView))
+//                .compose(RxUtils.bindToLifecycle(mRootView))
                 .subscribe(new ErrorHandleSubscriber<List<Topic>>(mErrorHandler) {
                     @Override
                     public void onError(@NonNull Throwable e) {
@@ -242,7 +242,7 @@ public class TopicListPresenter extends BasePresenter<TopicListContract.Model, T
                 .subscribeOn(Schedulers.io())
                 .retryWhen(new RetryWithDelay(3, 2))
                 .observeOn(AndroidSchedulers.mainThread())
-                .compose(RxUtils.bindToLifecycle(mRootView))
+//                .compose(RxUtils.bindToLifecycle(mRootView))
                 .subscribe(new ErrorHandleSubscriber<List<Node>>(mErrorHandler) {
                     @Override
                     public void onNext(@NonNull List<Node> data) {

@@ -16,7 +16,6 @@ import com.sneider.diycode.mvp.model.bean.Topic;
 import com.sneider.diycode.mvp.ui.adapter.TopicReplyAdapter;
 import com.sneider.diycode.utils.Constant;
 import com.sneider.diycode.utils.DiycodeUtils;
-import com.sneider.diycode.utils.RxUtils;
 import com.sneider.diycode.utils.html.HtmlUtils;
 
 import java.util.ArrayList;
@@ -166,7 +165,7 @@ public class TopicReplyPresenter extends BasePresenter<TopicReplyContract.Model,
                 .doAfterTerminate(() -> {
                     if (isRefresh) mRootView.hideLoading();
                 })
-                .compose(RxUtils.bindToLifecycle(mRootView))
+//                .compose(RxUtils.bindToLifecycle(mRootView))
                 .subscribe(new ErrorHandleSubscriber<List<Reply>>(mErrorHandler) {
                     @Override
                     public void onError(@NonNull Throwable e) {

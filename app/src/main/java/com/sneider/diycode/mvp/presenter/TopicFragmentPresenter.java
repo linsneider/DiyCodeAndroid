@@ -124,7 +124,7 @@ public class TopicFragmentPresenter extends BasePresenter<TopicFragmentContract.
                 .doAfterTerminate(() -> {
                     if (isRefresh) mRootView.hideLoading();
                 })
-                .compose(RxUtils.bindToLifecycle(mRootView))
+//                .compose(RxUtils.bindToLifecycle(mRootView))
                 .subscribe(new ErrorHandleSubscriber<List<Topic>>(mErrorHandler) {
                     @Override
                     public void onError(@NonNull Throwable e) {

@@ -17,7 +17,6 @@ import com.sneider.diycode.mvp.model.bean.Reply;
 import com.sneider.diycode.mvp.ui.adapter.NewsDetailAdapter;
 import com.sneider.diycode.utils.Constant;
 import com.sneider.diycode.utils.DiycodeUtils;
-import com.sneider.diycode.utils.RxUtils;
 import com.sneider.diycode.utils.html.HtmlUtils;
 
 import java.util.ArrayList;
@@ -179,7 +178,7 @@ public class NewsDetailPresenter extends BasePresenter<NewsDetailContract.Model,
                     if (isRefresh) mRootView.showLoading();
                 }).subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .compose(RxUtils.bindToLifecycle(mRootView))
+//                .compose(RxUtils.bindToLifecycle(mRootView))
                 .subscribe(new ErrorHandleSubscriber<List<Reply>>(mErrorHandler) {
                     @Override
                     public void onError(@NonNull Throwable e) {

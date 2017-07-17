@@ -21,7 +21,6 @@
     <string name="refresh">刷新</string>
     <string name="open_browser">在浏览器中打开</string>
     <string name="save">保存</string>
-    <string name="favorite">收藏</string>
     <string name="favorited">已收藏</string>
     <string name="view_my_favorite">查看我的收藏</string>
     <string name="open_web">在网页中查看</string>
@@ -53,7 +52,6 @@
     <string name="setting">设置</string>
     <string name="webview_hint">轻触屏幕重新加载</string>
     <string name="dot">•</string>
-    <string name="edit">编辑</string>
     <string name="preview">预览</string>
     <string name="content">内容(Markdown格式)</string>
     <string name="title">标题</string>
@@ -93,7 +91,6 @@
     <string name="read_count">{0}次阅读</string>
     <string name="no_reply">暂无回复</string>
     <string name="publish_time">于{0}发布</string>
-    <string name="topic">话题</string>
     <string name="no_data">没有数据</string>
     <string name="category">分类</string>
     <string name="uploading">正在上传&#8230;</string>

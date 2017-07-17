@@ -12,7 +12,6 @@ import com.sneider.diycode.mvp.model.bean.Reply;
 import com.sneider.diycode.mvp.ui.adapter.ReplyListAdapter;
 import com.sneider.diycode.utils.Constant;
 import com.sneider.diycode.utils.DiycodeUtils;
-import com.sneider.diycode.utils.RxUtils;
 import com.sneider.diycode.utils.html.HtmlUtils;
 
 import java.util.ArrayList;
@@ -115,7 +114,7 @@ public class ReplyListPresenter extends BasePresenter<ReplyListContract.Model, R
                 .doAfterTerminate(() -> {
                     if (isRefresh) mRootView.hideLoading();
                 })
-                .compose(RxUtils.bindToLifecycle(mRootView))
+//                .compose(RxUtils.bindToLifecycle(mRootView))
                 .subscribe(new ErrorHandleSubscriber<List<Reply>>(mErrorHandler) {
                     @Override
                     public void onError(@NonNull Throwable e) {

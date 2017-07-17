@@ -109,7 +109,7 @@ public class TopicDetailActivity extends BaseActivity<TopicDetailPresenter> impl
 
     @Override
     public void initData(Bundle savedInstanceState) {
-        mToolbar.setTitle(R.string.topic);
+        mToolbar.setTitle("");
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setOnClickListener(v -> mScrollView.scrollTo(0, 0));
         setSupportActionBar(mToolbar);
@@ -170,6 +170,7 @@ public class TopicDetailActivity extends BaseActivity<TopicDetailPresenter> impl
         mTvNodeName.setText(mTopic.getNode_name());
         String intervalTime = DateUtils.getIntervalTime(mTopic.getCreated_at());
         mTvTime.setText(MessageFormat.format(getString(R.string.publish_time), intervalTime));
+        mToolbar.setTitle(mTopic.getTitle());
         mTvTitle.setText(mTopic.getTitle());
         mTvReplyCount.setText(mTopic.getReplies_count() == 0 ? "" : String.valueOf(mTopic.getReplies_count()));
         mTvHit.setText(MessageFormat.format(getResources().getString(R.string.read_count), mTopic.getHits()));

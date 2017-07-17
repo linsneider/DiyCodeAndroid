@@ -133,7 +133,7 @@ public class NotificationListPresenter extends BasePresenter<NotificationListCon
                 .doAfterTerminate(() -> {
                     if (isRefresh) mRootView.hideLoading();
                 })
-                .compose(RxUtils.bindToLifecycle(mRootView))
+//                .compose(RxUtils.bindToLifecycle(mRootView))
                 .subscribe(new ErrorHandleSubscriber<List<Notification>>(mErrorHandler) {
                     @Override
                     public void onError(@NonNull Throwable e) {

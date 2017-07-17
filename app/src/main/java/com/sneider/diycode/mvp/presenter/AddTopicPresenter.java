@@ -120,7 +120,7 @@ public class AddTopicPresenter extends BasePresenter<AddTopicContract.Model, Add
                 .subscribeOn(Schedulers.io())
                 .retryWhen(new RetryWithDelay(3, 2))
                 .observeOn(AndroidSchedulers.mainThread())
-                .compose(RxUtils.bindToLifecycle(mRootView))
+//                .compose(RxUtils.bindToLifecycle(mRootView))
                 .subscribe(new ErrorHandleSubscriber<List<Node>>(mErrorHandler) {
                     @Override
                     public void onNext(@NonNull List<Node> data) {

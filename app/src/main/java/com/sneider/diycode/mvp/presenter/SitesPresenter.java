@@ -10,7 +10,6 @@ import com.sneider.diycode.mvp.contract.SitesContract;
 import com.sneider.diycode.mvp.model.bean.Sites;
 import com.sneider.diycode.mvp.ui.adapter.SitesAdapter;
 import com.sneider.diycode.utils.Constant;
-import com.sneider.diycode.utils.RxUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +75,7 @@ public class SitesPresenter extends BasePresenter<SitesContract.Model, SitesCont
                 .doAfterTerminate(() -> {
                     if (isRefresh) mRootView.hideLoading();
                 })
-                .compose(RxUtils.bindToLifecycle(mRootView))
+//                .compose(RxUtils.bindToLifecycle(mRootView))
                 .subscribe(new ErrorHandleSubscriber<List<Sites>>(mErrorHandler) {
                     @Override
                     public void onError(@NonNull Throwable e) {

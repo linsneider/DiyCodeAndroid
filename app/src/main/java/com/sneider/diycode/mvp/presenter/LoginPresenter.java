@@ -4,16 +4,13 @@ import android.app.Application;
 import android.text.TextUtils;
 
 import com.jess.arms.base.App;
-import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.di.scope.ActivityScope;
 import com.jess.arms.integration.AppManager;
 import com.jess.arms.mvp.BasePresenter;
 import com.sneider.diycode.mvp.contract.LoginContract;
 import com.sneider.diycode.mvp.model.bean.Token;
 import com.sneider.diycode.mvp.model.bean.User;
-import com.sneider.diycode.utils.Constant;
 import com.sneider.diycode.utils.DiycodeUtils;
-import com.sneider.diycode.utils.KeyStoreHelper;
 import com.sneider.diycode.utils.PrefUtils;
 import com.sneider.diycode.utils.RxUtils;
 
@@ -71,10 +68,11 @@ public class LoginPresenter extends BasePresenter<LoginContract.Model, LoginCont
                     @Override
                     public void onNext(@NonNull Token token) {
                         DiycodeUtils.setToken(mApplication, token);
-                        AppComponent appComponent = ((App) mApplication).getAppComponent();
+                        String tokenJson = ((App) mApplication).getAppComponent().gson().toJson(token);
                         try {
-                            String encrypt = KeyStoreHelper.encrypt(Constant.KEYSTORE_KEY_ALIAS, appComponent.gson().toJson(token));
-                            PrefUtils.getInstance(mApplication).put("token", encrypt);
+//                            tokenJson = KeyStoreHelper.encrypt(Constant.KEYSTORE_KEY_ALIAS, tokenJson);
+//                            Log.e(TAG, "tokenJson=====" + tokenJson);
+                            PrefUtils.getInstance(mApplication).put("token", tokenJson);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -100,14 +98,14 @@ public class LoginPresenter extends BasePresenter<LoginContract.Model, LoginCont
                     @Override
                     public void onNext(@NonNull User user) {
                         DiycodeUtils.setUser(mApplication, user);
-                        AppComponent appComponent = ((App) mApplication).getAppComponent();
+                        String userJson = ((App) mApplication).getAppComponent().gson().toJson(user);
                         try {
-//                            String encrypt = KeyStoreHelper.encrypt(Constant.KEYSTORE_KEY_ALIAS, appComponent.gson().toJson(user));
-                            PrefUtils.getInstance(mApplication).put("user", appComponent.gson().toJson(user));
+//                            userJson = KeyStoreHelper.encrypt(Constant.KEYSTORE_KEY_ALIAS, userJson);
+                            PrefUtils.getInstance(mApplication).put("user", userJson);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        mRootView.loginSuccess(username);
+                        mRootView.loginSuccess(user.getLogin());
                     }
                 });
     }

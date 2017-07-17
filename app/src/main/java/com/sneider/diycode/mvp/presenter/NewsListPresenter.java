@@ -18,7 +18,6 @@ import com.sneider.diycode.mvp.ui.adapter.NewsListAdapter;
 import com.sneider.diycode.utils.Constant;
 import com.sneider.diycode.utils.DiycodeUtils;
 import com.sneider.diycode.utils.PrefUtils;
-import com.sneider.diycode.utils.RxUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -119,7 +118,7 @@ public class NewsListPresenter extends BasePresenter<NewsListContract.Model, New
                 .doAfterTerminate(() -> {
                     if (isRefresh) mRootView.hideLoading();
                 })
-                .compose(RxUtils.bindToLifecycle(mRootView))
+//                .compose(RxUtils.bindToLifecycle(mRootView))
                 .subscribe(new ErrorHandleSubscriber<List<News>>(mErrorHandler) {
                     @Override
                     public void onError(@NonNull Throwable e) {
@@ -155,7 +154,7 @@ public class NewsListPresenter extends BasePresenter<NewsListContract.Model, New
                 .subscribeOn(Schedulers.io())
                 .retryWhen(new RetryWithDelay(3, 2))
                 .observeOn(AndroidSchedulers.mainThread())
-                .compose(RxUtils.bindToLifecycle(mRootView))
+//                .compose(RxUtils.bindToLifecycle(mRootView))
                 .subscribe(new ErrorHandleSubscriber<List<NewsNode>>(mErrorHandler) {
                     @Override
                     public void onNext(@NonNull List<NewsNode> data) {

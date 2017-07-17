@@ -5,7 +5,6 @@ import android.content.Context;
 import android.net.ParseException;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.aitangba.swipeback.ActivityLifecycleHelper;
 import com.alibaba.android.arouter.launcher.ARouter;
@@ -34,7 +33,6 @@ import com.sneider.diycode.mvp.model.bean.Token;
 import com.sneider.diycode.mvp.model.bean.User;
 import com.sneider.diycode.utils.Constant;
 import com.sneider.diycode.utils.DiycodeUtils;
-import com.sneider.diycode.utils.KeyStoreHelper;
 import com.sneider.diycode.utils.PrefUtils;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
@@ -186,17 +184,19 @@ public class GlobalConfiguration implements ConfigModule {
                 }
                 ARouter.init(application); // 尽可能早,推荐在Application中初始化
 
-                try {
-                    KeyStoreHelper.createKeys(application, Constant.KEYSTORE_KEY_ALIAS);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    KeyStoreHelper.createKeys(application, Constant.KEYSTORE_KEY_ALIAS);
+//                    Log.e("KeyStoreHelper", "create keys success");
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
 
                 String tokenJson = PrefUtils.getInstance(application).getString("token", "");
                 if (!TextUtils.isEmpty(tokenJson)) {
                     try {
-                        tokenJson = KeyStoreHelper.decrypt(Constant.KEYSTORE_KEY_ALIAS, tokenJson);
-                        Log.e("tokenJson--------------", tokenJson);
+//                        Log.e("tokenJson", "tokenJson==========" + tokenJson);
+//                        tokenJson = KeyStoreHelper.decrypt(Constant.KEYSTORE_KEY_ALIAS, tokenJson);
+//                        Log.e("tokenJson", "解密后的tokenJson==========" + tokenJson);
                         Token token = appComponent.gson().fromJson(tokenJson, Token.class);
                         if (token != null) {
                             DiycodeUtils.setToken(application, token);
@@ -209,7 +209,6 @@ public class GlobalConfiguration implements ConfigModule {
                 if (!TextUtils.isEmpty(userJson)) {
                     try {
 //                        userJson = KeyStoreHelper.decrypt(Constant.KEYSTORE_KEY_ALIAS, userJson);
-//                        Log.e("userJson", userJson);
                         User user = appComponent.gson().fromJson(userJson, User.class);
                         if (user != null) {
                             DiycodeUtils.setUser(application, user);

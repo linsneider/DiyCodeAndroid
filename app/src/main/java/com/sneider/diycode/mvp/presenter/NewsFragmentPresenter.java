@@ -14,7 +14,6 @@ import com.sneider.diycode.mvp.model.bean.News;
 import com.sneider.diycode.mvp.ui.adapter.NewsListAdapter;
 import com.sneider.diycode.utils.Constant;
 import com.sneider.diycode.utils.DiycodeUtils;
-import com.sneider.diycode.utils.RxUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,7 +114,7 @@ public class NewsFragmentPresenter extends BasePresenter<NewsFragmentContract.Mo
                 .doAfterTerminate(() -> {
                     if (isRefresh) mRootView.hideLoading();
                 })
-                .compose(RxUtils.bindToLifecycle(mRootView))
+//                .compose(RxUtils.bindToLifecycle(mRootView))
                 .subscribe(new ErrorHandleSubscriber<List<News>>(mErrorHandler) {
                     @Override
                     public void onError(@NonNull Throwable e) {

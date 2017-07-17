@@ -13,7 +13,6 @@ import com.sneider.diycode.mvp.model.bean.Project;
 import com.sneider.diycode.mvp.ui.adapter.ProjectListAdapter;
 import com.sneider.diycode.utils.Constant;
 import com.sneider.diycode.utils.DiycodeUtils;
-import com.sneider.diycode.utils.RxUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,7 +104,7 @@ public class ProjectFragmentPresenter extends BasePresenter<ProjectFragmentContr
                 .doAfterTerminate(() -> {
                     if (pullToRefresh) mRootView.hideLoading();
                 })
-                .compose(RxUtils.bindToLifecycle(mRootView))
+//                .compose(RxUtils.bindToLifecycle(mRootView))
                 .subscribe(new ErrorHandleSubscriber<List<Project>>(mErrorHandler) {
                     @Override
                     public void onError(@NonNull Throwable e) {

@@ -178,7 +178,7 @@ public class ProjectDetailPresenter extends BasePresenter<ProjectDetailContract.
                     if (isRefresh) mRootView.showLoading();
                 }).subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .compose(RxUtils.bindToLifecycle(mRootView))
+//                .compose(RxUtils.bindToLifecycle(mRootView))
                 .subscribe(new ErrorHandleSubscriber<List<Reply>>(mErrorHandler) {
                     @Override
                     public void onError(@NonNull Throwable e) {

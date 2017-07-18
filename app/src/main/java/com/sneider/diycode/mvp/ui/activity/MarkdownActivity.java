@@ -41,7 +41,7 @@ public class MarkdownActivity extends BaseActivity {
     public void initData(Bundle savedInstanceState) {
         mToolbar.setTitle(R.string.preview);
         mToolbar.setNavigationIcon(R.drawable.ic_back);
-        mToolbar.setOnClickListener(v -> mWebView.scrollTo(0, 0));
+        mToolbar.setOnClickListener(v -> mWebView.pageUp(true));
         setSupportActionBar(mToolbar);
 
         String content = getIntent().getStringExtra(EXTRA_CONTENT);

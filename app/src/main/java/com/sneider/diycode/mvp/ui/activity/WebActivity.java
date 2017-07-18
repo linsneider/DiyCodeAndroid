@@ -67,7 +67,7 @@ public class WebActivity extends BaseActivity {
     public void initData(Bundle savedInstanceState) {
         mToolbar.setTitle("");
         mToolbar.setNavigationIcon(R.drawable.ic_close);
-        mToolbar.setOnClickListener(v -> mWebView.scrollTo(0, 0));
+        mToolbar.setOnClickListener(v -> mWebView.pageUp(true));
         setSupportActionBar(mToolbar);
 
         WebSettings settings = mWebView.getSettings();

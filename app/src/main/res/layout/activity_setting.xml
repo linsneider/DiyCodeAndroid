@@ -30,58 +30,85 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.sneider.diycode.widget.SettingRowView
-                android:id="@+id/btn_clear_cache"
-                style="@style/layout_setting"
-                app:rowTitle="@string/clear_cache"/>
-
-            <com.sneider.diycode.widget.SettingRowView
-                android:id="@+id/btn_check_update"
-                style="@style/layout_setting"
-                app:rowTitle="@string/check_update"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingBottom="@dimen/spacing_s"
+                android:paddingStart="20dp"
+                android:paddingTop="@dimen/spacing_s"
+                android:text="@string/basic_setting"
+                android:textColor="@color/colorAccent"
+                android:textStyle="bold"/>
 
             <LinearLayout
-                android:id="@+id/btn_feedback"
-                style="@style/layout_setting"
-                android:paddingBottom="@dimen/spacing_m"
-                android:paddingTop="@dimen/spacing_m">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/color_ffffff"
+                android:divider="@drawable/divider"
+                android:dividerPadding="20dp"
+                android:orientation="vertical"
+                android:showDividers="middle">
+
+                <com.sneider.diycode.widget.SettingRowView
+                    android:id="@+id/btn_clear_cache"
+                    style="@style/layout_setting"
+                    app:rowTitle="@string/clear_cache"/>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingBottom="@dimen/spacing_s"
+                android:paddingStart="20dp"
+                android:paddingTop="@dimen/spacing_s"
+                android:text="@string/about_and_help"
+                android:textColor="@color/colorAccent"
+                android:textStyle="bold"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/color_ffffff"
+                android:divider="@drawable/divider"
+                android:dividerPadding="20dp"
+                android:orientation="vertical"
+                android:showDividers="middle">
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/btn_feedback"
+                    style="@style/layout_setting"
+                    android:paddingBottom="@dimen/spacing_m"
+                    android:paddingTop="@dimen/spacing_m"
                     android:text="@string/feedback"
                     android:textColor="@color/color_4d4d4d"
                     android:textSize="15sp"/>
-            </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/btn_contact"
-                style="@style/layout_setting"
-                android:paddingBottom="@dimen/spacing_m"
-                android:paddingTop="@dimen/spacing_m">
+                <com.sneider.diycode.widget.SettingRowView
+                    android:id="@+id/btn_check_update"
+                    style="@style/layout_setting"
+                    app:rowTitle="@string/check_update"/>
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/btn_contact"
+                    style="@style/layout_setting"
+                    android:paddingBottom="@dimen/spacing_m"
+                    android:paddingTop="@dimen/spacing_m"
                     android:text="@string/contact"
                     android:textColor="@color/color_4d4d4d"
                     android:textSize="15sp"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/btn_logout"
-                style="@style/layout_setting"
-                android:paddingBottom="@dimen/spacing_m"
-                android:paddingTop="@dimen/spacing_m"
-                android:visibility="gone">
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/btn_logout"
+                    style="@style/layout_setting"
                     android:gravity="center"
+                    android:paddingBottom="@dimen/spacing_m"
+                    android:paddingTop="@dimen/spacing_m"
                     android:text="@string/logout"
                     android:textColor="@color/colorAccent"
-                    android:textSize="18sp"/>
+                    android:textSize="18sp"
+                    android:visibility="gone"/>
             </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

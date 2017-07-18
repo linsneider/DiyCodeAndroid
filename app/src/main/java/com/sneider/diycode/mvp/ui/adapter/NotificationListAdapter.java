@@ -125,8 +125,7 @@ public class NotificationListAdapter extends DefaultAdapter<Notification> {
                         content = data.getMention().getBody_html();
                         break;
                     case "Topic":
-                        mTvTitle.setText(MessageFormat.format(mAppComponent.application().getString(R.string.create_topic),
-                                data.getTopic().getTitle()));
+                        mTvTitle.setText(R.string.create_topic);
                         content = data.getTopic().getTitle();
                         break;
                     case "NodeChanged":

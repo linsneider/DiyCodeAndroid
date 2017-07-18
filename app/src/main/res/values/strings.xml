@@ -6,7 +6,6 @@
 
     <item name="tag_first" type="id"/>
     <item name="tag_second" type="id"/>
-    <item name="tag_third" type="id"/>
     <item name="glide_tag" type="id"/>
     <item name="drawable_callback_tag" type="id"/>
 
@@ -130,7 +129,7 @@
     <string name="what_number">第{0}位会员</string>
     <string name="add_success">创建成功</string>
     <string name="add_failed">创建失败</string>
-    <string name="get_reply_failed">获取评论内容失败</string>
+    <string name="get_reply_failed">获取回复内容失败</string>
     <string name="upload_success">图片上传成功</string>
     <string name="upload_failed">图片上传失败</string>
     <string name="post_success">发布成功</string>
@@ -155,12 +154,15 @@
     <string name="what_reply">共收到{0}条回复</string>
     <string name="what_who_reply">{0}条回复 • 最后由{1}于{2}回复</string>
     <string name="info_deleted">相关信息已删除</string>
-    <string name="reply_at">在帖子"{0}"回复了:</string>
+    <string name="reply_at">在帖子\"{0}\"回复了:</string>
     <string name="mention_you">提及你:</string>
-    <string name="create_topic">创建了帖子: {0}</string>
-    <string name="what_create_topic">你发布的话题"{0}"由于内容原因</string>
-    <string name="what_node_moved">被管理员移到了"{0}"节点，请注意查看节点说明。</string>
+    <string name="create_topic">创建了帖子:</string>
+    <string name="what_create_topic">你发布的话题\"{0}\"由于内容原因</string>
+    <string name="what_node_moved">被管理员移到了\"{0}\"节点，请注意查看节点说明。</string>
     <string name="your_share">你的分享</string>
     <string name="no_content">暂无内容</string>
     <string name="what_floor">#{0}</string>
+    <string name="basic_setting">基本设置</string>
+    <string name="about_and_help">关于与帮助</string>
+    <string name="no_cache">当前没有缓存</string>
 </resources>

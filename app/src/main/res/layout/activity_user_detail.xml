@@ -116,6 +116,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/spacing_m"
+            android:background="@color/color_ffffff"
             android:orientation="vertical">
 
             <LinearLayout
@@ -145,6 +147,12 @@
                     android:textSize="15sp"/>
             </LinearLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="56dp"
+                android:background="@color/color_f0f0f0"/>
+
             <LinearLayout
                 android:id="@+id/ll_favorite"
                 style="@style/layout_user_info">
@@ -171,6 +179,12 @@
                     android:textColor="@color/colorAccent"
                     android:textSize="15sp"/>
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="56dp"
+                android:background="@color/color_f0f0f0"/>
 
             <LinearLayout
                 android:id="@+id/ll_reply"
@@ -199,6 +213,12 @@
                     android:textSize="15sp"/>
             </LinearLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="56dp"
+                android:background="@color/color_f0f0f0"/>
+
             <LinearLayout
                 android:id="@+id/ll_share"
                 style="@style/layout_user_info">
@@ -224,6 +244,12 @@
                     android:textColor="@color/colorAccent"
                     android:textSize="15sp"/>
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="56dp"
+                android:background="@color/color_f0f0f0"/>
 
             <LinearLayout
                 android:id="@+id/ll_follower"
@@ -252,6 +278,12 @@
                     android:textSize="15sp"/>
             </LinearLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="56dp"
+                android:background="@color/color_f0f0f0"/>
+
             <LinearLayout
                 android:id="@+id/ll_following"
                 style="@style/layout_user_info">
@@ -278,6 +310,12 @@
                     android:textColor="@color/colorAccent"
                     android:textSize="15sp"/>
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="56dp"
+                android:background="@color/color_f0f0f0"/>
 
             <LinearLayout
                 android:id="@+id/ll_block"

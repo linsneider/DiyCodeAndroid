@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -47,7 +47,7 @@ public class SettingActivity extends BaseActivity<SettingPresenter> implements S
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.btn_clear_cache) SettingRowView mBtnClearCache;
     @BindView(R.id.btn_check_update) SettingRowView mBtnCheckUpdate;
-    @BindView(R.id.btn_logout) LinearLayout mBtnLogout;
+    @BindView(R.id.btn_logout) TextView mBtnLogout;
 
     @BindColor(R.color.color_4d4d4d) int color_4d4d4d;
     @BindColor(R.color.color_999999) int color_999999;
@@ -78,7 +78,8 @@ public class SettingActivity extends BaseActivity<SettingPresenter> implements S
     }
 
     private void setupAppCache() {
-        mBtnClearCache.setSettingDescription(
+        mBtnClearCache.setSettingDescription("0.00 B".equals(CacheDataUtils.getTotalCacheSize(this)) ?
+                getString(R.string.no_cache) :
                 MessageFormat.format(getString(R.string.total_cache_description), CacheDataUtils.getTotalCacheSize(this)));
     }
 

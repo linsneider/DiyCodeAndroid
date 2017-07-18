@@ -17,7 +17,7 @@
         android:id="@+id/setting_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_xs"
+        android:layout_marginTop="@dimen/spacing_xxs"
         android:textColor="@color/color_62646c"
-        android:textSize="12sp"/>
+        android:textSize="13sp"/>
 </LinearLayout>

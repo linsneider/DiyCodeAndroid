@@ -45,7 +45,6 @@
     <style name="layout_user_info">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">48dp</item>
-        <item name="android:layout_marginTop">12dp</item>
         <item name="android:background">@drawable/bg_recycler</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:orientation">horizontal</item>
@@ -58,7 +57,6 @@
     <style name="layout_setting">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">12dp</item>
         <item name="android:background">@drawable/bg_recycler</item>
         <item name="android:paddingEnd">20dp</item>
         <item name="android:paddingStart">20dp</item>
